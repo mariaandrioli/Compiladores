@@ -7,6 +7,5 @@ posfixo.tab.c: posfixo.y
 lex.yy.c: posfixo.l 
 	flex posfixo.l
 
-
 clean : 
 	rm -f posfixo.tab.* lex.yy.c 
