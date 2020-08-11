@@ -19,7 +19,7 @@ int conta_ids;
 
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES 
 %token VIRGULA PONTO_E_VIRGULA DOIS_PONTOS PONTO
-%token T_BEGIN T_END VAR IDENT ATRIBUICAO
+%token T_BEGIN T_END VAR IDENT ATRIBUICAO NUMERO
 %token LABEL TYPE ARRAY OF PROCEDURE FUNCTION
 %token INTEGER BOOLEAN
 %token GOTO IF THEN ELSE WHILE DO OR DIV AND NOT
@@ -92,11 +92,25 @@ lista_idents: lista_idents VIRGULA IDENT
             | IDENT
 ;
 
-
 comando_composto: T_BEGIN comandos T_END ;
 
-comandos: ;
+comandos: atribuicao PONTO_E_VIRGULA comandos |
+         atribuicao PONTO_E_VIRGULA 
+;
 
+atribuicao: IDENT  
+            {
+               // printf("%s\n", token); // imprime nome da var
+            }
+            ATRIBUICAO
+            NUMERO
+            {
+               char crct[10];
+               sprintf(crct, "CRCT %d", atoi(token));
+               geraCodigo(NULL, crct);
+               //printf("%s\n", token); // imprime valor da var
+            }
+;
 
 %%
 
