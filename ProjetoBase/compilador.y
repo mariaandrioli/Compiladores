@@ -1,6 +1,6 @@
 
-// Testar se funciona corretamente o empilhamento de parâmetros
-// passados por valor ou por referência.
+// Testar se funciona corretamente o empilhamento de parï¿½metros
+// passados por valor ou por referï¿½ncia.
 
 
 %{
@@ -9,7 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "compilador.h"
+#include "functions.h"
 
+tabelaSimbolos_t tabelaSimbolos;
 int num_vars;
 
 %}
@@ -17,17 +19,22 @@ int num_vars;
 %token PROGRAM ABRE_PARENTESES FECHA_PARENTESES 
 %token VIRGULA PONTO_E_VIRGULA DOIS_PONTOS PONTO
 %token T_BEGIN T_END VAR IDENT ATRIBUICAO
+%token LABEL TYPE ARRAY OF PROCEDURE FUNCTION
+%token INTEGER BOOLEAN
+%token GOTO IF THEN ELSE WHILE DO OR DIV AND NOT
+%token ABRE_CHAVES FECHA_CHAVES ABRE_COLCHETES FECHA_COLCHETES
 
 %%
 
-programa    :{ 
-             geraCodigo (NULL, "INPP"); 
-             }
-             PROGRAM IDENT 
-             ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
-             bloco PONTO {
-             geraCodigo (NULL, "PARA"); 
-             }
+programa :{ 
+               tabelaSimbolos = initTabelaSimbolos();
+               geraCodigo (NULL, "INPP"); 
+            }
+               PROGRAM IDENT 
+               ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
+               bloco PONTO {
+               geraCodigo (NULL, "PARA"); 
+            }
 ;
 
 bloco       : 
@@ -65,8 +72,8 @@ tipo        : IDENT
 ;
 
 lista_id_var: lista_id_var VIRGULA IDENT 
-              { /* insere última vars na tabela de símbolos */ }
-            | IDENT { /* insere vars na tabela de símbolos */}
+              { /* insere ultima vars na tabela de simbolos */ }
+            | IDENT { /* insere vars na tabela de simbolos */}
 ;
 
 lista_idents: lista_idents VIRGULA IDENT  
@@ -74,15 +81,14 @@ lista_idents: lista_idents VIRGULA IDENT
 ;
 
 
-comando_composto: T_BEGIN comandos T_END 
+comando_composto: T_BEGIN comandos T_END ;
 
-comandos:    
-;
+comandos: ;
 
 
 %%
 
-main (int argc, char** argv) {
+int main (int argc, char** argv) {
    FILE* fp;
    extern FILE* yyin;
 
@@ -99,12 +105,16 @@ main (int argc, char** argv) {
 
 
 /* -------------------------------------------------------------------
- *  Inicia a Tabela de Símbolos
+ *  Inicia a Tabela de Sï¿½mbolos
  * ------------------------------------------------------------------- */
 
    yyin=fp;
    yyparse();
 
    return 0;
+}
+
+void yyerror (char* msg){
+    imprimeErro(msg);
 }
 
