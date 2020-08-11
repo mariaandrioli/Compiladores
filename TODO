@@ -1,0 +1,9 @@
+Aula 6 :
+    AMEM k
+    CRCT k
+    ARMZ x,y
+
+    amem = saber qts variaveis foram declaradas e coloca na pilha com simb, cat, end, tipo
+    implementar pilha para colocar os valores
+    
+    crct e armz = vao ser colocados os valores

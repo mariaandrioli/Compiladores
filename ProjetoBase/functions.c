@@ -3,6 +3,35 @@
 #include <string.h>
 #include "functions.h"
 #include "compilador.h"
+#define TAM_PILHA 100
+
+pilha_t initPilha() {
+    pilha_t pilha = (pilha_t) malloc(sizeof(struct pilha_t));
+    pilha->elementos = (void**) malloc(TAM_PILHA* sizeof(void*));
+    pilha->head = -1;
+    return pilha;
+}
+
+void push(pilha_t pilha, void *elem) {
+    (pilha->head)++;
+    if(pilha->head == TAM_PILHA) {
+        puts("Pilha cheia");
+        exit(1);
+    }
+    pilha->elementos[pilha->head] = elem;
+    return ;
+}
+
+void* pop(pilha_t pilha) {
+    if(pilha->head == -1)
+        return NULL;
+    --(pilha->head);
+    return pilha->elementos[pilha->head+1];
+}
+
+void freePilha(pilha_t pilha) {
+    free(pilha->elementos);
+}
 
 tabelaSimbolos_t initTabelaSimbolos() {
     tabelaSimbolos_t tabela = (tabelaSimbolos_t) malloc(sizeof(struct tabelaSimbolos_t));

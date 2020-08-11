@@ -5,6 +5,17 @@
 #include <stdio.h>
 #include <math.h>
 
+
+typedef struct pilha_t {
+    int head;
+    void **elementos;
+} *pilha_t;
+
+pilha_t initPilha();
+void push(pilha_t pilha, void *elem);
+void* pop(pilha_t pilha);
+void freePilha(pilha_t pilha);
+
 typedef struct elemento_t {
   char simbolo[100];
   int categoria;
