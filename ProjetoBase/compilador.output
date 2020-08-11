@@ -49,21 +49,19 @@ Grammar
 
    11 $@4: %empty
 
-   12 $@5: %empty
+   12 declara_var: $@4 lista_id_var DOIS_PONTOS tipo PONTO_E_VIRGULA
 
-   13 declara_var: $@4 lista_id_var DOIS_PONTOS tipo $@5 PONTO_E_VIRGULA
+   13 tipo: IDENT
 
-   14 tipo: IDENT
+   14 lista_id_var: lista_id_var VIRGULA IDENT
+   15             | IDENT
 
-   15 lista_id_var: lista_id_var VIRGULA IDENT
-   16             | IDENT
+   16 lista_idents: lista_idents VIRGULA IDENT
+   17             | IDENT
 
-   17 lista_idents: lista_idents VIRGULA IDENT
-   18             | IDENT
+   18 comando_composto: T_BEGIN comandos T_END
 
-   19 comando_composto: T_BEGIN comandos T_END
-
-   20 comandos: %empty
+   19 comandos: %empty
 
 
 Terminals, with rules where they appear
@@ -73,14 +71,14 @@ Terminals, with rules where they appear
     PROGRAM (258) 2
     ABRE_PARENTESES (259) 2
     FECHA_PARENTESES (260) 2
-    VIRGULA (261) 15 17
-    PONTO_E_VIRGULA (262) 2 13
-    DOIS_PONTOS (263) 13
+    VIRGULA (261) 14 16
+    PONTO_E_VIRGULA (262) 2 12
+    DOIS_PONTOS (263) 12
     PONTO (264) 2
-    T_BEGIN (265) 19
-    T_END (266) 19
+    T_BEGIN (265) 18
+    T_END (266) 18
     VAR (267) 7
-    IDENT (268) 2 14 15 16 17 18
+    IDENT (268) 2 13 14 15 16 17
     ATRIBUICAO (269)
     LABEL (270)
     TYPE (271)
@@ -135,29 +133,26 @@ Nonterminals, with rules where they appear
         on left: 9 10
         on right: 7 9
     declara_var (46)
-        on left: 13
+        on left: 12
         on right: 9 10
     $@4 (47)
         on left: 11
-        on right: 13
-    $@5 (48)
-        on left: 12
-        on right: 13
-    tipo (49)
-        on left: 14
-        on right: 13
-    lista_id_var (50)
-        on left: 15 16
-        on right: 13 15
-    lista_idents (51)
-        on left: 17 18
-        on right: 2 17
-    comando_composto (52)
-        on left: 19
+        on right: 12
+    tipo (48)
+        on left: 13
+        on right: 12
+    lista_id_var (49)
+        on left: 14 15
+        on right: 12 14
+    lista_idents (50)
+        on left: 16 17
+        on right: 2 16
+    comando_composto (51)
+        on left: 18
         on right: 4
-    comandos (53)
-        on left: 20
-        on right: 19
+    comandos (52)
+        on left: 19
+        on right: 18
 
 
 State 0
@@ -216,15 +211,15 @@ State 6
 
 State 7
 
-   18 lista_idents: IDENT .
+   17 lista_idents: IDENT .
 
-    $default  reduce using rule 18 (lista_idents)
+    $default  reduce using rule 17 (lista_idents)
 
 
 State 8
 
     2 programa: $@1 PROGRAM IDENT ABRE_PARENTESES lista_idents . FECHA_PARENTESES PONTO_E_VIRGULA bloco PONTO
-   17 lista_idents: lista_idents . VIRGULA IDENT
+   16 lista_idents: lista_idents . VIRGULA IDENT
 
     FECHA_PARENTESES  shift, and go to state 9
     VIRGULA           shift, and go to state 10
@@ -239,7 +234,7 @@ State 9
 
 State 10
 
-   17 lista_idents: lista_idents VIRGULA . IDENT
+   16 lista_idents: lista_idents VIRGULA . IDENT
 
     IDENT  shift, and go to state 12
 
@@ -259,9 +254,9 @@ State 11
 
 State 12
 
-   17 lista_idents: lista_idents VIRGULA IDENT .
+   16 lista_idents: lista_idents VIRGULA IDENT .
 
-    $default  reduce using rule 17 (lista_idents)
+    $default  reduce using rule 16 (lista_idents)
 
 
 State 13
@@ -323,9 +318,9 @@ State 19
 
 State 20
 
-   19 comando_composto: T_BEGIN . comandos T_END
+   18 comando_composto: T_BEGIN . comandos T_END
 
-    $default  reduce using rule 20 (comandos)
+    $default  reduce using rule 19 (comandos)
 
     comandos  go to state 25
 
@@ -358,7 +353,7 @@ State 23
 
 State 24
 
-   13 declara_var: $@4 . lista_id_var DOIS_PONTOS tipo $@5 PONTO_E_VIRGULA
+   12 declara_var: $@4 . lista_id_var DOIS_PONTOS tipo PONTO_E_VIRGULA
 
     IDENT  shift, and go to state 27
 
@@ -367,7 +362,7 @@ State 24
 
 State 25
 
-   19 comando_composto: T_BEGIN comandos . T_END
+   18 comando_composto: T_BEGIN comandos . T_END
 
     T_END  shift, and go to state 29
 
@@ -381,15 +376,15 @@ State 26
 
 State 27
 
-   16 lista_id_var: IDENT .
+   15 lista_id_var: IDENT .
 
-    $default  reduce using rule 16 (lista_id_var)
+    $default  reduce using rule 15 (lista_id_var)
 
 
 State 28
 
-   13 declara_var: $@4 lista_id_var . DOIS_PONTOS tipo $@5 PONTO_E_VIRGULA
-   15 lista_id_var: lista_id_var . VIRGULA IDENT
+   12 declara_var: $@4 lista_id_var . DOIS_PONTOS tipo PONTO_E_VIRGULA
+   14 lista_id_var: lista_id_var . VIRGULA IDENT
 
     VIRGULA      shift, and go to state 30
     DOIS_PONTOS  shift, and go to state 31
@@ -397,21 +392,21 @@ State 28
 
 State 29
 
-   19 comando_composto: T_BEGIN comandos T_END .
+   18 comando_composto: T_BEGIN comandos T_END .
 
-    $default  reduce using rule 19 (comando_composto)
+    $default  reduce using rule 18 (comando_composto)
 
 
 State 30
 
-   15 lista_id_var: lista_id_var VIRGULA . IDENT
+   14 lista_id_var: lista_id_var VIRGULA . IDENT
 
     IDENT  shift, and go to state 32
 
 
 State 31
 
-   13 declara_var: $@4 lista_id_var DOIS_PONTOS . tipo $@5 PONTO_E_VIRGULA
+   12 declara_var: $@4 lista_id_var DOIS_PONTOS . tipo PONTO_E_VIRGULA
 
     IDENT  shift, and go to state 33
 
@@ -420,36 +415,27 @@ State 31
 
 State 32
 
-   15 lista_id_var: lista_id_var VIRGULA IDENT .
+   14 lista_id_var: lista_id_var VIRGULA IDENT .
 
-    $default  reduce using rule 15 (lista_id_var)
+    $default  reduce using rule 14 (lista_id_var)
 
 
 State 33
 
-   14 tipo: IDENT .
+   13 tipo: IDENT .
 
-    $default  reduce using rule 14 (tipo)
+    $default  reduce using rule 13 (tipo)
 
 
 State 34
 
-   13 declara_var: $@4 lista_id_var DOIS_PONTOS tipo . $@5 PONTO_E_VIRGULA
+   12 declara_var: $@4 lista_id_var DOIS_PONTOS tipo . PONTO_E_VIRGULA
 
-    $default  reduce using rule 12 ($@5)
-
-    $@5  go to state 35
+    PONTO_E_VIRGULA  shift, and go to state 35
 
 
 State 35
 
-   13 declara_var: $@4 lista_id_var DOIS_PONTOS tipo $@5 . PONTO_E_VIRGULA
+   12 declara_var: $@4 lista_id_var DOIS_PONTOS tipo PONTO_E_VIRGULA .
 
-    PONTO_E_VIRGULA  shift, and go to state 36
-
-
-State 36
-
-   13 declara_var: $@4 lista_id_var DOIS_PONTOS tipo $@5 PONTO_E_VIRGULA .
-
-    $default  reduce using rule 13 (declara_var)
+    $default  reduce using rule 12 (declara_var)
