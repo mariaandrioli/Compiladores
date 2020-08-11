@@ -13,6 +13,7 @@
 
 tabelaSimbolos_t tabelaSimbolos;
 int num_vars;
+int conta_ids;
 
 %}
 
@@ -46,13 +47,18 @@ bloco       :
               ;
 
 
-
-
 parte_declara_vars:  var 
 ;
 
-
-var         : { } VAR declara_vars
+var         : {
+                  conta_ids = 0;
+               } 
+               VAR declara_vars
+              { /* AMEM */
+               char amem[10];
+               sprintf(amem, "AMEM %d", conta_ids);
+               geraCodigo(NULL, amem);
+              }
             |
 ;
 
@@ -60,11 +66,12 @@ declara_vars: declara_vars declara_var
             | declara_var 
 ;
 
-declara_var : { } 
+declara_var : 
+               { 
+               
+               } 
               lista_id_var DOIS_PONTOS 
               tipo 
-              { /* AMEM */
-              }
               PONTO_E_VIRGULA
 ;
 
@@ -72,8 +79,13 @@ tipo        : IDENT
 ;
 
 lista_id_var: lista_id_var VIRGULA IDENT 
-              { /* insere ultima vars na tabela de simbolos */ }
-            | IDENT { /* insere vars na tabela de simbolos */}
+               { 
+                 conta_ids++; 
+               }
+            | IDENT 
+               {
+                conta_ids++; 
+               }
 ;
 
 lista_idents: lista_idents VIRGULA IDENT  
