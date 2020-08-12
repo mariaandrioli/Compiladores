@@ -13,7 +13,8 @@
 
 tabelaSimbolos_t tabelaSimbolos;
 int num_vars;
-int conta_ids;
+int conta_vars;
+int conta_vars_tipo;
 
 %}
 
@@ -27,8 +28,7 @@ int conta_ids;
 
 %%
 
-programa :{ 
-               tabelaSimbolos = initTabelaSimbolos();
+programa: { 
                geraCodigo (NULL, "INPP"); 
             }
                PROGRAM IDENT 
@@ -38,9 +38,10 @@ programa :{
             }
 ;
 
-bloco       : 
+bloco: 
               parte_declara_vars
               { 
+               // imprimeTabela(tabelaSimbolos);
               }
 
               comando_composto 
@@ -50,13 +51,13 @@ bloco       :
 parte_declara_vars:  var 
 ;
 
-var         : {
-                  conta_ids = 0;
+var: {
+                  conta_vars = 0;
                } 
                VAR declara_vars
               { /* AMEM */
                char amem[10];
-               sprintf(amem, "AMEM %d", conta_ids);
+               sprintf(amem, "AMEM %d", conta_vars);
                geraCodigo(NULL, amem);
               }
             |
@@ -66,25 +67,45 @@ declara_vars: declara_vars declara_var
             | declara_var 
 ;
 
-declara_var : 
+declara_var: 
                { 
-               
+                  conta_vars_tipo = 0;
                } 
               lista_id_var DOIS_PONTOS 
               tipo 
               PONTO_E_VIRGULA
+              {
+               
+              }
 ;
 
-tipo        : IDENT
+tipo: IDENT 
+            {
+               insereTipo(tabelaSimbolos, conta_vars_tipo, token); // insere tipo na tabela
+            }
 ;
 
 lista_id_var: lista_id_var VIRGULA IDENT 
                { 
-                 conta_ids++; 
+                  conta_vars_tipo++;
+                  elemento_t paraInserir = malloc(sizeof(elemento_t));
+                  strcpy(paraInserir->simbolo, token);
+                  paraInserir->categoria = 0;
+                  paraInserir->endereco = conta_vars;
+                  insereTabela(tabelaSimbolos, paraInserir);
+                 // adiciona na tabela de simbolos com simbolo, offset == contaids
+                 conta_vars++; 
                }
             | IDENT 
                {
-                conta_ids++; 
+                  conta_vars_tipo++;
+                  elemento_t paraInserir = malloc(sizeof(elemento_t));
+                  strcpy(paraInserir->simbolo, token);
+                  paraInserir->categoria = 0;
+                  paraInserir->endereco = conta_vars;
+                  insereTabela(tabelaSimbolos, paraInserir);
+                // adiciona na tabela de simbolos com simbolo, offset == contaids
+                conta_vars++; 
                }
 ;
 
@@ -108,6 +129,7 @@ atribuicao: IDENT
                char crct[10];
                sprintf(crct, "CRCT %d", atoi(token));
                geraCodigo(NULL, crct);
+               // fazer armz colocando no end lexico x, y
                //printf("%s\n", token); // imprime valor da var
             }
 ;
@@ -129,10 +151,7 @@ int main (int argc, char** argv) {
       return(-1);
    }
 
-
-/* -------------------------------------------------------------------
- *  Inicia a Tabela de S�mbolos
- * ------------------------------------------------------------------- */
+   tabelaSimbolos = initTabelaSimbolos();
 
    yyin=fp;
    yyparse();

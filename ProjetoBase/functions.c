@@ -62,3 +62,23 @@ void freeTabela(tabelaSimbolos_t tabela) {
     free(tabela);
     tabela = NULL;
 }
+
+void imprimeTabela(tabelaSimbolos_t tabela) {
+    for (int i = tabela->head; i >= 0; i--){
+        if (tabela->elementos[i]->simbolo != NULL){
+            printf("%s %d %d %s\n", tabela->elementos[i]->simbolo, 
+            tabela->elementos[i]->categoria, 
+            tabela->elementos[i]->endereco,
+            tabela->elementos[i]->tipo);
+        }
+    }
+    printf("\n\n");
+}
+
+void insereTipo(tabelaSimbolos_t tabela, int cont, char* token) {
+    int j = 0;
+    //printf("\n\n%d\n",tabela->head);
+    for (int i = tabela->head; j < cont && i >= 0; i--, j++){
+        strcpy(tabela->elementos[i]->tipo, token);
+    }
+}
