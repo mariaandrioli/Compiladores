@@ -1,6 +1,32 @@
+Aula 5 :
+    Implementar tabela de simbolos com insere, busca, retira (cap 10)
+
 Aula 6 :
+    Ter que colcoar os valores na tabela de pilha
     AMEM k
     CRCT k
     ARMZ x,y
 
--Fazer armz e arrumar funcs
+Aula 7 :
+    Implementar declaracao de var (usando k de amem k)
+    Implementar regras relacionadas com espressoes (25 a 30)
+
+Aula 8 :
+    Implementar while (slide 92)
+
+Aula 9 :
+    Implementar if 
+
+Aula 10 :
+    Implementar fatoração da regra 
+
+Aula 11 :
+    Procedimento com param por valor
+
+Aula 12 :
+    Procedimento com param por ref
+
+Aula 13 :
+    Funções (procedimento com valor de retorno)
+
+-Comandos LEIT (read), IMPR (write), DMEM (desaloca memoria)
