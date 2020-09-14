@@ -22,6 +22,7 @@ R00: NADA
      CRCT 0
      IMPR
      DSVS R03
+R02: NADA 
      CRVL 0, 0
      IMPR
      CRCT 1
@@ -30,7 +31,4 @@ R00: NADA
      CRCT 1
      SOMA
      ARMZ 0, 0
-     DSVS R02
 R03: NADA 
-     DMEM 2
-     PARA

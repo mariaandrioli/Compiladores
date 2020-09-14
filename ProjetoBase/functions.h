@@ -17,6 +17,7 @@ int isEmpty(struct pilha_t* stack);
 void push(struct pilha_t* stack, int item);
 int pop(struct pilha_t* stack);
 void geraFinalRepeticao(struct pilha_t* pilhaDeRotulos);
+void geraFinalCondicao(struct pilha_t* pilhaDeRotulos, int *rotulo_atual);
 
 enum categorias {varSimples, procedure, parametro, function, label}; 
 

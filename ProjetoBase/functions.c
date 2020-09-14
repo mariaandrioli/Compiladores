@@ -127,3 +127,16 @@ void geraFinalRepeticao(struct pilha_t* pilhaDeRotulos){
 
     geraCodigo(rot2, "NADA");
 }
+
+void geraFinalCondicao(struct pilha_t* pilhaDeRotulos, int *rotulo_atual){
+    char * rot2 = malloc(sizeof(char)*4);
+    char * aux = malloc(sizeof(char)*4);
+    int num = pop(pilhaDeRotulos); 
+    num = pop(pilhaDeRotulos); 
+    strcpy(rot2, "R");
+    sprintf(aux, "%02d", num);
+    strcat(rot2, aux);
+    geraCodigo(rot2, "NADA");
+    
+    *rotulo_atual = num;
+}

@@ -189,28 +189,7 @@ comandos: atribuicao PONTO_E_VIRGULA comandos |
          condicao
 ;
 
-condicao: IF ABRE_PARENTESES expressao_booleana FECHA_PARENTESES THEN {
-               char * rot = malloc(sizeof(char)*4);
-               strcpy(rot, "R");
-               geraRotulo(&rotulo_atual, rot);
-               push(pilhaDeRotulos, rotulo_atual);
-
-               char aux[9];
-               strcpy(aux, "DSVS ");
-               strcat(aux, rot);
-               geraCodigo(NULL, aux);
-            } comandos ELSE {
-               char * rot = malloc(sizeof(char)*4);
-               strcpy(rot, "R");
-               geraRotulo(&rotulo_atual, rot);
-               push(pilhaDeRotulos, rotulo_atual);
-
-               char aux[9];
-               strcpy(aux, "DSVF ");
-               strcat(aux, rot);
-               geraCodigo(NULL, aux);
-            } comandos |
-            IF expressao_booleana THEN {
+condicao: IF ABRE_PARENTESES expressao_booleana {
                char * rot = malloc(sizeof(char)*4);
                strcpy(rot, "R");
                geraRotulo(&rotulo_atual, rot);
@@ -221,7 +200,22 @@ condicao: IF ABRE_PARENTESES expressao_booleana FECHA_PARENTESES THEN {
                strcat(aux, rot);
                geraCodigo(NULL, aux);
             }
-            comandos ELSE {
+            FECHA_PARENTESES THEN condicao2 |
+            IF expressao_booleana {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
+
+               char aux[9];
+               strcpy(aux, "DSVF ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            }
+            THEN condicao2 
+;
+
+condicao2: comandos {
                char * rot = malloc(sizeof(char)*4);
                strcpy(rot, "R");
                geraRotulo(&rotulo_atual, rot);
@@ -231,7 +225,16 @@ condicao: IF ABRE_PARENTESES expressao_booleana FECHA_PARENTESES THEN {
                strcpy(aux, "DSVS ");
                strcat(aux, rot);
                geraCodigo(NULL, aux);
-            } comandos 
+            } ELSE {
+               geraFinalCondicao(pilhaDeRotulos, &rotulo_atual);
+               printf("\n\n%d\n\n", rotulo_atual);
+            } comandos {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, atoi(rot));
+               geraCodigo(rot, "NADA");
+            } 
 ;
 
 repeticao: WHILE
