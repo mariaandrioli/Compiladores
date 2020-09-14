@@ -190,6 +190,11 @@ write      { simbolo = simb_not;
         IMPRIME("write  ");
         return WRITE;
 }
+div     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("div  ");
+        return DIV;
+}
 \=      { simbolo = simb_not;  
         strncpy (token, yytext, TAM_TOKEN);
         IMPRIME("igual  ");
@@ -234,11 +239,6 @@ write      { simbolo = simb_not;
         strncpy (token, yytext, TAM_TOKEN);
         IMPRIME("asterisco  ");
         return ASTERISCO;
-}
-\/     { simbolo = simb_not;  
-        strncpy (token, yytext, TAM_TOKEN);
-        IMPRIME("barra  ");
-        return BARRA;
 }
 \{  { simbolo = simb_abre_chaves;  
           strncpy (token, yytext, TAM_TOKEN);

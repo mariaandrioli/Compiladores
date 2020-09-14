@@ -141,26 +141,33 @@ leitura: READ ABRE_PARENTESES param_read FECHA_PARENTESES;
 param_read: param_read VIRGULA read | read;
 
 read: IDENT {
-   geraCodigo(NULL, "LEIT");
-   char exp[10];
-   int offset;
-   offset = buscaTabela(tabelaSimbolos, token);
-   sprintf(exp, "ARMZ %d, %d", nivel_lex_atual,offset);
-   geraCodigo(NULL, exp);
-};
+      geraCodigo(NULL, "LEIT");
+      char exp[10];
+      int offset;
+      offset = buscaTabela(tabelaSimbolos, token);
+      sprintf(exp, "ARMZ %d, %d", nivel_lex_atual,offset);
+      geraCodigo(NULL, exp);
+   };
 
 impressao: WRITE ABRE_PARENTESES param_write FECHA_PARENTESES;
 
 param_write: param_write VIRGULA write | write;
 
 write: IDENT {
-   char exp[10];
-   int offset;
-   offset = buscaTabela(tabelaSimbolos, token);
-   sprintf(exp, "CRVL %d, %d", nivel_lex_atual,offset);
-   geraCodigo(NULL, exp);
-   geraCodigo(NULL, "IMPR");
-};
+      char exp[10];
+      int offset;
+      offset = buscaTabela(tabelaSimbolos, token);
+      sprintf(exp, "CRVL %d, %d", nivel_lex_atual,offset);
+      geraCodigo(NULL, exp);
+      geraCodigo(NULL, "IMPR");
+   }| NUMERO
+   {
+      /* CRCT */
+      char exp[10];
+      sprintf(exp, "CRCT %d", atoi(token));
+      geraCodigo(NULL, exp);
+      geraCodigo(NULL, "IMPR");
+   };
 
 
 comando_composto: T_BEGIN comandos T_END ;
@@ -176,7 +183,55 @@ comandos: atribuicao PONTO_E_VIRGULA comandos |
          impressao |
          repeticao PONTO_E_VIRGULA comandos |
          repeticao PONTO_E_VIRGULA |
-         repeticao
+         repeticao  |
+         condicao PONTO_E_VIRGULA comandos |
+         condicao PONTO_E_VIRGULA |
+         condicao
+;
+
+condicao: IF ABRE_PARENTESES expressao_booleana FECHA_PARENTESES THEN {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
+
+               char aux[9];
+               strcpy(aux, "DSVS ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            } comandos ELSE {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
+
+               char aux[9];
+               strcpy(aux, "DSVF ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            } comandos |
+            IF expressao_booleana THEN {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
+
+               char aux[9];
+               strcpy(aux, "DSVF ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            }
+            comandos ELSE {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
+
+               char aux[9];
+               strcpy(aux, "DSVS ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            } comandos 
 ;
 
 repeticao: WHILE
@@ -292,7 +347,7 @@ termo: termo ASTERISCO fator
       {
          geraCodigo(NULL, "MULT");
       } |
-      termo BARRA fator  
+      termo DIV fator  
       {
          geraCodigo(NULL, "DIVI");
       } |
