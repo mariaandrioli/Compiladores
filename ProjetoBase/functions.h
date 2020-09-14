@@ -5,16 +5,18 @@
 #include <stdio.h>
 #include <math.h>
 
+struct pilha_t { 
+    int top; 
+    unsigned capacity; 
+    int* array; 
+}; 
 
-typedef struct pilha_t {
-    int head;
-    void **elementos;
-} *pilha_t;
-
-pilha_t initPilha();
-void push(pilha_t pilha, void *elem);
-void* pop(pilha_t pilha);
-void freePilha(pilha_t pilha);
+struct pilha_t* createStack(unsigned capacity);
+int isFull(struct pilha_t* stack);
+int isEmpty(struct pilha_t* stack);
+void push(struct pilha_t* stack, int item);
+int pop(struct pilha_t* stack);
+void geraFinalRepeticao(struct pilha_t* pilhaDeRotulos);
 
 enum categorias {varSimples, procedure, parametro, function, label}; 
 
@@ -37,6 +39,6 @@ int insereTabela(tabelaSimbolos_t tabela, elemento_t paraInserir);
 void abaixaTopo(tabelaSimbolos_t tabela);
 void imprimeTabela(tabelaSimbolos_t tabela);
 void insereTipo(tabelaSimbolos_t tabela, int cont, char* token);
-
+void geraRotulo(int *num, char* rot);
 
 #endif // __FUNCTIONS_H__

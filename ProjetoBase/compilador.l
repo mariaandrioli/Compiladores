@@ -180,6 +180,16 @@ not      { simbolo = simb_not;
         IMPRIME("not  ");
         return NOT;
 }
+read      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("read  ");
+        return READ;
+}
+write      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("write  ");
+        return WRITE;
+}
 \=      { simbolo = simb_not;  
         strncpy (token, yytext, TAM_TOKEN);
         IMPRIME("igual  ");
@@ -224,6 +234,11 @@ not      { simbolo = simb_not;
         strncpy (token, yytext, TAM_TOKEN);
         IMPRIME("asterisco  ");
         return ASTERISCO;
+}
+\/     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("barra  ");
+        return BARRA;
 }
 \{  { simbolo = simb_abre_chaves;  
           strncpy (token, yytext, TAM_TOKEN);

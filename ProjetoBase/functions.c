@@ -1,37 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <string.h>
 #include "functions.h"
 #include "compilador.h"
 #define TAM_PILHA 100
 
-pilha_t initPilha() {
-    pilha_t pilha = (pilha_t) malloc(sizeof(struct pilha_t));
-    pilha->elementos = (void**) malloc(TAM_PILHA* sizeof(void*));
-    pilha->head = -1;
-    return pilha;
-}
+struct pilha_t* createStack(unsigned capacity) 
+{ 
+    struct pilha_t* stack = (struct pilha_t*)malloc(sizeof(struct pilha_t)); 
+    stack->capacity = capacity; 
+    stack->top = -1; 
+    stack->array = (int*)malloc(stack->capacity * sizeof(int)); 
+    return stack; 
+} 
 
-void push(pilha_t pilha, void *elem) {
-    (pilha->head)++;
-    if(pilha->head == TAM_PILHA) {
-        puts("Pilha cheia");
-        exit(1);
-    }
-    pilha->elementos[pilha->head] = elem;
-    return ;
-}
+int isFull(struct pilha_t* stack) 
+{ 
+    return stack->top == stack->capacity - 1; 
+} 
 
-void* pop(pilha_t pilha) {
-    if(pilha->head == -1)
-        return NULL;
-    --(pilha->head);
-    return pilha->elementos[pilha->head+1];
-}
+int isEmpty(struct pilha_t* stack) 
+{ 
+    return stack->top == -1; 
+} 
 
-void freePilha(pilha_t pilha) {
-    free(pilha->elementos);
-}
+void push(struct pilha_t* stack, int item) 
+{ 
+    if (isFull(stack)) 
+        return; 
+    stack->array[++stack->top] = item; 
+    //printf("%d pushed to stack\n", item); 
+} 
+  
+int pop(struct pilha_t* stack) 
+{ 
+    if (isEmpty(stack)) 
+        return INT_MIN; 
+    return stack->array[stack->top--]; 
+} 
+  
+int peek(struct pilha_t* stack) 
+{ 
+    if (isEmpty(stack)) 
+        return INT_MIN; 
+    return stack->array[stack->top]; 
+} 
 
 tabelaSimbolos_t initTabelaSimbolos() {
     tabelaSimbolos_t tabela = (tabelaSimbolos_t) malloc(sizeof(struct tabelaSimbolos_t));
@@ -81,4 +95,35 @@ void insereTipo(tabelaSimbolos_t tabela, int cont, char* token) {
     for (int i = tabela->head; j < cont && i >= 0; i--, j++){
         strcpy(tabela->elementos[i]->tipo, token);
     }
+}
+
+void geraRotulo(int *num, char* rot) {
+    char aux[4];
+    int rotulo = *num;;
+    rotulo = rotulo + 1;
+    sprintf(aux, "%02d", rotulo);
+    strcat(rot, aux);
+    *num = rotulo;
+}
+
+void geraFinalRepeticao(struct pilha_t* pilhaDeRotulos){
+    char * rot1 = malloc(sizeof(char)*4);
+    char * rot2 = malloc(sizeof(char)*4);
+    char * aux = malloc(sizeof(char)*4);
+    int num = pop(pilhaDeRotulos); 
+    strcpy(rot2, "R");
+    sprintf(aux, "%02d", num);
+    strcat(rot2, aux);
+
+    num = pop(pilhaDeRotulos); 
+    strcpy(rot1, "R");
+    sprintf(aux, "%02d", num);
+    strcat(rot1, aux);
+
+    char exp[9];
+    strcpy(exp, "DSVS ");
+    strcat(exp, rot1);
+    geraCodigo(NULL, exp);
+
+    geraCodigo(rot2, "NADA");
 }

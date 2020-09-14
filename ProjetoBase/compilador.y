@@ -12,11 +12,13 @@
 #include "functions.h"
 
 tabelaSimbolos_t tabelaSimbolos;
+struct pilha_t* pilhaDeRotulos;
 int num_vars;
 int conta_vars;
 int conta_vars_tipo;
 char var_atribuicao_atual[20];
 char operacao_bool[5];
+int rotulo_atual;
 int nivel_lex_atual;
 
 %}
@@ -29,16 +31,25 @@ int nivel_lex_atual;
 %token GOTO IF THEN ELSE WHILE DO OR DIV AND NOT
 %token ABRE_CHAVES FECHA_CHAVES ABRE_COLCHETES FECHA_COLCHETES
 %token IGUAL MAIOR MENOR DESIGUAL MAIOR_IGUAL MENOR_IGUAL
-%token MAIS MENOS ASTERISCO 
+%token MAIS MENOS ASTERISCO BARRA
+%token READ WRITE 
 
 %%
 
 programa: { 
                geraCodigo (NULL, "INPP"); 
                nivel_lex_atual = 0;
+               rotulo_atual = -1;
             }
-               PROGRAM IDENT 
-               ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
+               PROGRAM IDENT declara_program
+               
+;
+
+declara_program: ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
+               bloco PONTO {
+               geraCodigo (NULL, "PARA"); 
+            } |
+            PONTO_E_VIRGULA
                bloco PONTO {
                geraCodigo (NULL, "PARA"); 
             }
@@ -47,7 +58,7 @@ programa: {
 bloco: 
               parte_declara_vars
               { 
-               imprimeTabela(tabelaSimbolos);
+               //imprimeTabela(tabelaSimbolos);
               }
 
               comando_composto 
@@ -119,25 +130,108 @@ lista_idents: lista_idents VIRGULA IDENT
             | IDENT
 ;
 
+leitura: READ ABRE_PARENTESES param_read FECHA_PARENTESES;
+
+param_read: param_read VIRGULA read | read;
+
+read: IDENT {
+   geraCodigo(NULL, "LEIT");
+   char exp[10];
+   int offset;
+   offset = buscaTabela(tabelaSimbolos, token);
+   sprintf(exp, "ARMZ %d, %d", nivel_lex_atual,offset);
+   geraCodigo(NULL, exp);
+};
+
+impressao: WRITE ABRE_PARENTESES param_write FECHA_PARENTESES;
+
+param_write: param_write VIRGULA write | write;
+
+write: IDENT {
+   char exp[10];
+   int offset;
+   offset = buscaTabela(tabelaSimbolos, token);
+   sprintf(exp, "CRVL %d, %d", nivel_lex_atual,offset);
+   geraCodigo(NULL, exp);
+   geraCodigo(NULL, "IMPR");
+};
+
+
 comando_composto: T_BEGIN comandos T_END ;
 
 comandos: atribuicao PONTO_E_VIRGULA comandos |
-         atribuicao PONTO_E_VIRGULA 
+         atribuicao PONTO_E_VIRGULA |
+         atribuicao |
+         leitura PONTO_E_VIRGULA comandos |
+         leitura PONTO_E_VIRGULA |
+         leitura |
+         impressao PONTO_E_VIRGULA comandos |
+         impressao PONTO_E_VIRGULA  |
+         impressao |
+         repeticao PONTO_E_VIRGULA comandos |
+         repeticao PONTO_E_VIRGULA |
+         repeticao
+;
+
+repeticao: WHILE
+            {
+            char * rot = malloc(sizeof(char)*4);
+            strcpy(rot, "R");
+            geraRotulo(&rotulo_atual, rot);
+            //printf("\n\n %d, %s\n\n", rotulo_atual, rot);
+            push(pilhaDeRotulos, atoi(rot));
+            geraCodigo(rot, "NADA");
+            } repeticao2
+;
+
+repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO {
+            char * rot = malloc(sizeof(char)*4);
+            strcpy(rot, "R");
+            geraRotulo(&rotulo_atual, rot);
+            push(pilhaDeRotulos, rotulo_atual);
+
+            char aux[9];
+            strcpy(aux, "DSVF ");
+            strcat(aux, rot);
+            geraCodigo(NULL, aux);
+} repeticao3 ;
+
+repeticao3: comando_composto  
+   {
+      geraFinalRepeticao(pilhaDeRotulos);
+   }
+   | comandos 
+   {
+      geraFinalRepeticao(pilhaDeRotulos);
+   } 
+;
+
+expressao_booleana: expressao {
+    // TODO: VERIFICAR TIPOS
+    }
 ;
 
 atribuicao: IDENT  
             {
-               sprintf(var_atribuicao_atual, token);
+               sprintf(var_atribuicao_atual, "%s", token);
             }
-            ATRIBUICAO
-            expressao
+            ATRIBUICAO {
+               
+            }
+            expressao {
+            /* ARMZ */
+            char exp[10];
+            int offset;
+            offset = buscaTabela(tabelaSimbolos, var_atribuicao_atual);
+            sprintf(exp, "ARMZ %d, %d", nivel_lex_atual,offset);
+            geraCodigo(NULL, exp);
+            }
 ;
 
 expressao: expressao_interna relacao expressao_interna
          {
-
+            geraCodigo(NULL, operacao_bool);
          } | expressao_interna {
-            
          }
 ;
 
@@ -161,35 +255,53 @@ relacao: MAIOR {
       }
 ;
 
-expressao_interna: expressao_interna MAIS termo |
-      expressao_interna MENOS termo |
-      expressao_interna OR termo |
+expressao_interna: expressao_interna MAIS termo 
+      {
+         geraCodigo(NULL, "SOMA");
+      } |
+      expressao_interna MENOS termo 
+      {
+         geraCodigo(NULL, "SUBT");
+      } |
+      expressao_interna OR termo 
+      {
+         geraCodigo(NULL, "DISJ");
+      } |
       termo
 ;
 
-termo: termo ASTERISCO fator |
-      termo DIV fator |
-      termo AND fator |
+termo: termo ASTERISCO fator 
+      {
+         geraCodigo(NULL, "MULT");
+      } |
+      termo BARRA fator  
+      {
+         geraCodigo(NULL, "DIVI");
+      } |
+      termo AND fator  
+      {
+         geraCodigo(NULL, "CONJ");
+      } |
       fator
 ;
 
-fator: IDENT |
-      
-      NUMERO
-      {
-         /* CRCT */
-         char crct[10];
-         sprintf(crct, "CRCT %d", atoi(token));
-         geraCodigo(NULL, crct);
+fator: IDENT {
+      // CRVL
+      char exp[10];
+      int offset;
+      offset = buscaTabela(tabelaSimbolos, token);
+      sprintf(exp, "CRVL %d, %d", nivel_lex_atual, offset);
+      geraCodigo(NULL, exp);
+   } | 
+   NUMERO
+   {
+      /* CRCT */
+      char exp[10];
+      sprintf(exp, "CRCT %d", atoi(token));
+      geraCodigo(NULL, exp);
+   } |
 
-            /* ARMZ */
-         int offset;
-         offset = buscaTabela(tabelaSimbolos, var_atribuicao_atual);
-         sprintf(crct, "ARMZ %d, %d", nivel_lex_atual,offset);
-         geraCodigo(NULL, crct);
-      } |
-
-      ABRE_PARENTESES expressao FECHA_PARENTESES
+   ABRE_PARENTESES expressao FECHA_PARENTESES
 
 %%
 
@@ -209,6 +321,7 @@ int main (int argc, char** argv) {
    }
 
    tabelaSimbolos = initTabelaSimbolos();
+   pilhaDeRotulos = createStack(100);
 
    yyin=fp;
    yyparse();
@@ -219,4 +332,3 @@ int main (int argc, char** argv) {
 void yyerror (char* msg){
     imprimeErro(msg);
 }
-
