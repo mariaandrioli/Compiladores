@@ -47,10 +47,16 @@ programa: {
 
 declara_program: ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
                bloco PONTO {
+               char dmem[10];
+               sprintf(dmem, "DMEM %d", conta_vars);
+               geraCodigo(NULL, dmem);
                geraCodigo (NULL, "PARA"); 
             } |
             PONTO_E_VIRGULA
                bloco PONTO {
+               char dmem[10];
+               sprintf(dmem, "DMEM %d", conta_vars);
+               geraCodigo(NULL, dmem);
                geraCodigo (NULL, "PARA"); 
             }
 ;
@@ -185,16 +191,28 @@ repeticao: WHILE
 ;
 
 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO {
-            char * rot = malloc(sizeof(char)*4);
-            strcpy(rot, "R");
-            geraRotulo(&rotulo_atual, rot);
-            push(pilhaDeRotulos, rotulo_atual);
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
 
-            char aux[9];
-            strcpy(aux, "DSVF ");
-            strcat(aux, rot);
-            geraCodigo(NULL, aux);
-} repeticao3 ;
+               char aux[9];
+               strcpy(aux, "DSVF ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            } repeticao3 |
+            expressao_booleana DO {
+               char * rot = malloc(sizeof(char)*4);
+               strcpy(rot, "R");
+               geraRotulo(&rotulo_atual, rot);
+               push(pilhaDeRotulos, rotulo_atual);
+
+               char aux[9];
+               strcpy(aux, "DSVF ");
+               strcat(aux, rot);
+               geraCodigo(NULL, aux);
+            } repeticao3 
+;
 
 repeticao3: comando_composto  
    {
