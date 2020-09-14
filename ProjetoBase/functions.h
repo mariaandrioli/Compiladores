@@ -16,9 +16,11 @@ void push(pilha_t pilha, void *elem);
 void* pop(pilha_t pilha);
 void freePilha(pilha_t pilha);
 
+enum categorias {varSimples, procedure, parametro, function, label}; 
+
 typedef struct elemento_t {
   char simbolo[100];
-  int categoria;
+  enum categorias categoria;
   int endereco;
   char tipo[8];
 } *elemento_t;

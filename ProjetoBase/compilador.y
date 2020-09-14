@@ -15,6 +15,9 @@ tabelaSimbolos_t tabelaSimbolos;
 int num_vars;
 int conta_vars;
 int conta_vars_tipo;
+char var_atribuicao_atual[20];
+char operacao_bool[5];
+int nivel_lex_atual;
 
 %}
 
@@ -25,11 +28,14 @@ int conta_vars_tipo;
 %token INTEGER BOOLEAN
 %token GOTO IF THEN ELSE WHILE DO OR DIV AND NOT
 %token ABRE_CHAVES FECHA_CHAVES ABRE_COLCHETES FECHA_COLCHETES
+%token IGUAL MAIOR MENOR DESIGUAL MAIOR_IGUAL MENOR_IGUAL
+%token MAIS MENOS ASTERISCO 
 
 %%
 
 programa: { 
                geraCodigo (NULL, "INPP"); 
+               nivel_lex_atual = 0;
             }
                PROGRAM IDENT 
                ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
@@ -41,7 +47,7 @@ programa: {
 bloco: 
               parte_declara_vars
               { 
-               // imprimeTabela(tabelaSimbolos);
+               imprimeTabela(tabelaSimbolos);
               }
 
               comando_composto 
@@ -90,7 +96,7 @@ lista_id_var: lista_id_var VIRGULA IDENT
                   conta_vars_tipo++;
                   elemento_t paraInserir = malloc(sizeof(elemento_t));
                   strcpy(paraInserir->simbolo, token);
-                  paraInserir->categoria = 0;
+                  paraInserir->categoria = varSimples;
                   paraInserir->endereco = conta_vars;
                   insereTabela(tabelaSimbolos, paraInserir);
                  // adiciona na tabela de simbolos com simbolo, offset == contaids
@@ -101,7 +107,7 @@ lista_id_var: lista_id_var VIRGULA IDENT
                   conta_vars_tipo++;
                   elemento_t paraInserir = malloc(sizeof(elemento_t));
                   strcpy(paraInserir->simbolo, token);
-                  paraInserir->categoria = 0;
+                  paraInserir->categoria = varSimples;
                   paraInserir->endereco = conta_vars;
                   insereTabela(tabelaSimbolos, paraInserir);
                 // adiciona na tabela de simbolos com simbolo, offset == contaids
@@ -121,18 +127,69 @@ comandos: atribuicao PONTO_E_VIRGULA comandos |
 
 atribuicao: IDENT  
             {
-               // printf("%s\n", token); // imprime nome da var
+               sprintf(var_atribuicao_atual, token);
             }
             ATRIBUICAO
-            NUMERO
-            {
-               char crct[10];
-               sprintf(crct, "CRCT %d", atoi(token));
-               geraCodigo(NULL, crct);
-               // fazer armz colocando no end lexico x, y
-               //printf("%s\n", token); // imprime valor da var
-            }
+            expressao
 ;
+
+expressao: expressao_interna relacao expressao_interna
+         {
+
+         } | expressao_interna {
+            
+         }
+;
+
+relacao: MAIOR {
+      strcpy(operacao_bool, "CMMA"); 
+      } 
+      | MENOR {
+      strcpy(operacao_bool, "CMME");
+      } 
+      | MAIOR_IGUAL {
+         strcpy(operacao_bool, "CMAG");
+      } 
+      | MENOR_IGUAL {
+         strcpy(operacao_bool, "CMEG");
+      } 
+      | IGUAL {
+         strcpy(operacao_bool, "CMIG");
+      } 
+      | DESIGUAL {
+         strcpy(operacao_bool, "CMDG");
+      }
+;
+
+expressao_interna: expressao_interna MAIS termo |
+      expressao_interna MENOS termo |
+      expressao_interna OR termo |
+      termo
+;
+
+termo: termo ASTERISCO fator |
+      termo DIV fator |
+      termo AND fator |
+      fator
+;
+
+fator: IDENT |
+      
+      NUMERO
+      {
+         /* CRCT */
+         char crct[10];
+         sprintf(crct, "CRCT %d", atoi(token));
+         geraCodigo(NULL, crct);
+
+            /* ARMZ */
+         int offset;
+         offset = buscaTabela(tabelaSimbolos, var_atribuicao_atual);
+         sprintf(crct, "ARMZ %d, %d", nivel_lex_atual,offset);
+         geraCodigo(NULL, crct);
+      } |
+
+      ABRE_PARENTESES expressao FECHA_PARENTESES
 
 %%
 

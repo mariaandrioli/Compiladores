@@ -180,6 +180,51 @@ not      { simbolo = simb_not;
         IMPRIME("not  ");
         return NOT;
 }
+\=      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("igual  ");
+        return IGUAL;
+}
+\>      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("maior  ");
+        return MAIOR;
+}
+\<      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("menor  ");
+        return MENOR;
+}
+\!\=      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("desgiual  ");
+        return DESIGUAL;
+}
+\>\=      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("maior_igual  ");
+        return MAIOR_IGUAL;
+}
+\<\=      { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("menor_igual  ");
+        return MENOR_IGUAL;
+}
+\+     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("mais  ");
+        return MAIS;
+}
+\-     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("menos  ");
+        return MENOS;
+}
+\*     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("asterisco  ");
+        return ASTERISCO;
+}
 \{  { simbolo = simb_abre_chaves;  
           strncpy (token, yytext, TAM_TOKEN);
           IMPRIME(" abre_chaves  ");

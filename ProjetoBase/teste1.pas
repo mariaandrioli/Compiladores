@@ -3,6 +3,6 @@ var m,n :  integer;
     a,b: integer;
 begin
     m:=0;
-    a:=1;
+    b:=10;
 end.
 
