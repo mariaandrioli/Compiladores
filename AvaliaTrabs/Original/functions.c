@@ -63,10 +63,11 @@ void abaixaTopo(tabelaSimbolos_t tabela){
     (tabela->head)--;
 }
 
-int buscaTabela(tabelaSimbolos_t tabela, char *simbolo){
+int buscaTabela(tabelaSimbolos_t tabela, char *simbolo, int *nivel){
     for (int i = tabela->head; i >= 0; i--){
         if (strcmp((tabela->elementos[i])->simbolo, simbolo) == 0){
-            return i;
+            *nivel = tabela->elementos[i]->nivel_lex;
+            return tabela->elementos[i]->endereco;
         }
     }
     return (-1);
@@ -80,8 +81,9 @@ void freeTabela(tabelaSimbolos_t tabela) {
 void imprimeTabela(tabelaSimbolos_t tabela) {
     for (int i = tabela->head; i >= 0; i--){
         if (tabela->elementos[i]->simbolo != NULL){
-            printf("%s %d %d %s\n", tabela->elementos[i]->simbolo, 
+            printf("nome:%s cat:%d lex:%d desl:%d tipo:%s\n", tabela->elementos[i]->simbolo, 
             tabela->elementos[i]->categoria, 
+            tabela->elementos[i]->nivel_lex,
             tabela->elementos[i]->endereco,
             tabela->elementos[i]->tipo);
         }

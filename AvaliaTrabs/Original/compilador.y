@@ -1,8 +1,3 @@
-
-// Testar se funciona corretamente o empilhamento de par�metros
-// passados por valor ou por refer�ncia.
-
-
 %{
 #include <stdio.h>
 #include <ctype.h>
@@ -22,6 +17,8 @@ char var_atribuicao_atual[20];
 char operacao_bool[5];
 int rotulo_atual;
 int nivel_lex_atual;
+int proc_atual_end;
+int conta_vars_proc_atual;
 
 %}
 
@@ -67,10 +64,14 @@ declara_program: ABRE_PARENTESES lista_idents FECHA_PARENTESES PONTO_E_VIRGULA
 bloco: 
               parte_declara_vars
               { 
-               //imprimeTabela(tabelaSimbolos);
+                //imprimeTabela(tabelaSimbolos); // Testa tabela de simbolos
               }
 
               comando_composto 
+              {
+                 //imprimeTabela(tabelaSimbolos);
+              }
+              
               ;
 
 
@@ -117,6 +118,7 @@ lista_id_var: lista_id_var VIRGULA IDENT
                   elemento_t paraInserir = malloc(sizeof(elemento_t));
                   strcpy(paraInserir->simbolo, token);
                   paraInserir->categoria = varSimples;
+                  paraInserir->nivel_lex = nivel_lex_atual;
                   paraInserir->endereco = conta_vars;
                   insereTabela(tabelaSimbolos, paraInserir);
                  // adiciona na tabela de simbolos com simbolo, offset == contaids
@@ -128,10 +130,12 @@ lista_id_var: lista_id_var VIRGULA IDENT
                   elemento_t paraInserir = malloc(sizeof(elemento_t));
                   strcpy(paraInserir->simbolo, token);
                   paraInserir->categoria = varSimples;
+                  paraInserir->nivel_lex = nivel_lex_atual;
                   paraInserir->endereco = conta_vars;
                   insereTabela(tabelaSimbolos, paraInserir);
-                // adiciona na tabela de simbolos com simbolo, offset == contaids
-                conta_vars++; 
+                  // adiciona na tabela de simbolos com simbolo, offset == contaids
+                  conta_vars++; 
+                  imprimeTabela(tabelaSimbolos);
                }
 ;
 
@@ -147,8 +151,9 @@ read: IDENT {
       geraCodigo(NULL, "LEIT");
       char exp[10];
       int offset;
-      offset = buscaTabela(tabelaSimbolos, token);
-      sprintf(exp, "ARMZ %d, %d", nivel_lex_atual,offset);
+      int nivel_lex = 0;
+      offset = buscaTabela(tabelaSimbolos, token, &nivel_lex);
+      sprintf(exp, "ARMZ %d, %d",  nivel_lex,offset);
       geraCodigo(NULL, exp);
    };
 
@@ -159,8 +164,9 @@ param_write: param_write VIRGULA write | write;
 write: IDENT {
       char exp[10];
       int offset;
-      offset = buscaTabela(tabelaSimbolos, token);
-      sprintf(exp, "CRVL %d, %d", nivel_lex_atual,offset);
+      int nivel_lex = 0;
+      offset = buscaTabela(tabelaSimbolos, token, &nivel_lex);
+      sprintf(exp, "CRVL %d, %d",  nivel_lex , offset);
       geraCodigo(NULL, exp);
       geraCodigo(NULL, "IMPR");
    }| NUMERO
@@ -174,10 +180,41 @@ write: IDENT {
    };
 
 
-comando_composto: procedure_function | T_BEGIN  comandos T_END ;
+comando_composto: procedure_function | T_BEGIN comandos T_END ;
 
-procedure_function: PROCEDURE IDENT 
-      procedure_function2 PONTO_E_VIRGULA procedure_function3 |
+procedure_function: PROCEDURE {
+         nivel_lex_atual++;
+         char * rot = malloc(sizeof(char)*4);
+         strcpy(rot, "R");
+         geraRotulo(&rotulo_atual, rot);
+         push(pilhaDeRotulos, rotulo_atual);
+
+         char aux[9];
+         char aux2[9];
+         strcpy(aux, "DSVS ");
+         strcat(aux, rot);
+         geraCodigo(NULL, aux);
+         
+         strcpy(rot, "R");
+         geraRotulo(&rotulo_atual, rot);
+         push(pilhaDeRotulos, atoi(rot));
+         proc_atual_end = atoi(rot);
+
+         strcpy(aux, "ENPR ");
+         sprintf(aux2, "%d", nivel_lex_atual);
+         strcat(aux, aux2);
+         geraCodigo(rot, aux);
+      } IDENT 
+      {
+         elemento_t paraInserir = malloc(sizeof(elemento_t));
+         strcpy(paraInserir->simbolo, token);
+         paraInserir->categoria = procedure;
+         paraInserir->nivel_lex = nivel_lex_atual;
+         paraInserir->endereco = proc_atual_end;
+         insereTabela(tabelaSimbolos, paraInserir);
+      }
+      procedure_function2 PONTO_E_VIRGULA procedure_function3 {
+      } |
       FUNCTION IDENT 
       procedure_function2 DOIS_PONTOS retorno_func PONTO_E_VIRGULA procedure_function3
 ;
@@ -186,13 +223,17 @@ procedure_function2: ABRE_PARENTESES declara_params FECHA_PARENTESES |
 ;
 
 procedure_function3: 
-         bloco PONTO_E_VIRGULA comando_composto 
+         bloco PONTO_E_VIRGULA {
+            
+         } comando_composto 
 ;
 
 declara_params: VAR params_ref | 
          VAR params_ref declara_params2 |
          params_valor declara_params2 | 
-         params_valor 
+         params_valor {
+            conta_vars_proc_atual = 0;
+         }
          ;
 
 declara_params2: PONTO_E_VIRGULA declara_params;
@@ -202,8 +243,14 @@ params_valor: params_valor VIRGULA param_valor | param_valor;
 param_valor: IDENT DOIS_PONTOS tipo_param_valor;
 
 tipo_param_valor: IDENT {
-   //func para inserir {printf("\n\naaaaaa\n\n");}
-}
+            conta_vars_proc_atual++;
+            elemento_t paraInserir = malloc(sizeof(elemento_t));
+            strcpy(paraInserir->simbolo, token);
+            paraInserir->categoria = varSimples;
+            paraInserir->nivel_lex = nivel_lex_atual;
+            paraInserir->endereco = conta_vars_proc_atual;
+            insereTabela(tabelaSimbolos, paraInserir);
+         }
 ;
 
 params_ref: params_ref VIRGULA param_ref | param_ref;
@@ -352,9 +399,10 @@ atribuicao: IDENT
             expressao {
             /* ARMZ */
             char exp[10];
+            int nivel_lex = 0;
             int offset;
-            offset = buscaTabela(tabelaSimbolos, var_atribuicao_atual);
-            sprintf(exp, "ARMZ %d, %d", nivel_lex_atual,offset);
+            offset = buscaTabela(tabelaSimbolos, var_atribuicao_atual, &nivel_lex);
+            sprintf(exp, "ARMZ %d, %d", nivel_lex ,offset);
             geraCodigo(NULL, exp);
             }
 ;
@@ -426,8 +474,9 @@ fator: IDENT {
       // CRVL
       char exp[10];
       int offset;
-      offset = buscaTabela(tabelaSimbolos, token);
-      sprintf(exp, "CRVL %d, %d", nivel_lex_atual, offset);
+      int nivel_lex = 0;
+      offset = buscaTabela(tabelaSimbolos, token, &nivel_lex);
+      sprintf(exp, "CRVL %d, %d",  nivel_lex , offset);
       geraCodigo(NULL, exp);
    } | 
    NUMERO

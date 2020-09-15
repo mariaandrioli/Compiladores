@@ -6,12 +6,11 @@ var x, y: integer;
         z:=x;
         x:=x-1;
         if (z>1)
-        then p
+        then y:=2;
         else y:=1;
         y:=y*z
-    end
+    end;
 begin
     read(x);
-    p
-    write (x,y)
+    write (x,y);
 end.

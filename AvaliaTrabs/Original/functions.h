@@ -24,6 +24,7 @@ enum categorias {varSimples, procedure, parametro, function, label};
 typedef struct elemento_t {
   char simbolo[100];
   enum categorias categoria;
+  int nivel_lex;
   int endereco;
   char tipo[8];
 } *elemento_t;
@@ -34,7 +35,7 @@ typedef struct tabelaSimbolos_t {
 } *tabelaSimbolos_t;
 
 tabelaSimbolos_t initTabelaSimbolos();
-int buscaTabela(tabelaSimbolos_t tabela, char *simbolo);
+int buscaTabela(tabelaSimbolos_t tabela, char *simbolo, int *nivel);
 void freeTabela(tabelaSimbolos_t tabela);
 int insereTabela(tabelaSimbolos_t tabela, elemento_t paraInserir);
 void abaixaTopo(tabelaSimbolos_t tabela);
