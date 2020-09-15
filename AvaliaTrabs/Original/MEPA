@@ -30,6 +30,5 @@ R03: NADA
      IMPR
      CRVL 0, 1
      IMPR
-     DMEM 0
      DMEM 1
      PARA

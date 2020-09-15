@@ -35,7 +35,7 @@ typedef struct tabelaSimbolos_t {
 } *tabelaSimbolos_t;
 
 tabelaSimbolos_t initTabelaSimbolos();
-int buscaTabela(tabelaSimbolos_t tabela, char *simbolo, int *nivel);
+elemento_t buscaTabela(tabelaSimbolos_t tabela, char *simbolo);
 void freeTabela(tabelaSimbolos_t tabela);
 int insereTabela(tabelaSimbolos_t tabela, elemento_t paraInserir);
 void abaixaTopo(tabelaSimbolos_t tabela);

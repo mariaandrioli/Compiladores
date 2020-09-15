@@ -135,7 +135,6 @@ lista_id_var: lista_id_var VIRGULA IDENT
                   insereTabela(tabelaSimbolos, paraInserir);
                   // adiciona na tabela de simbolos com simbolo, offset == contaids
                   conta_vars++; 
-                  imprimeTabela(tabelaSimbolos);
                }
 ;
 
@@ -150,10 +149,9 @@ param_read: param_read VIRGULA read | read;
 read: IDENT {
       geraCodigo(NULL, "LEIT");
       char exp[10];
-      int offset;
-      int nivel_lex = 0;
-      offset = buscaTabela(tabelaSimbolos, token, &nivel_lex);
-      sprintf(exp, "ARMZ %d, %d",  nivel_lex,offset);
+      elemento_t elemento = malloc(sizeof(elemento_t));
+      elemento = buscaTabela(tabelaSimbolos, token);
+      sprintf(exp, "ARMZ %d, %d",  elemento->nivel_lex ,  elemento->endereco);
       geraCodigo(NULL, exp);
    };
 
@@ -163,10 +161,9 @@ param_write: param_write VIRGULA write | write;
 
 write: IDENT {
       char exp[10];
-      int offset;
-      int nivel_lex = 0;
-      offset = buscaTabela(tabelaSimbolos, token, &nivel_lex);
-      sprintf(exp, "CRVL %d, %d",  nivel_lex , offset);
+      elemento_t elemento = malloc(sizeof(elemento_t));
+      elemento = buscaTabela(tabelaSimbolos, token);
+      sprintf(exp, "CRVL %d, %d",  elemento->nivel_lex ,  elemento->endereco);
       geraCodigo(NULL, exp);
       geraCodigo(NULL, "IMPR");
    }| NUMERO
@@ -399,10 +396,9 @@ atribuicao: IDENT
             expressao {
             /* ARMZ */
             char exp[10];
-            int nivel_lex = 0;
-            int offset;
-            offset = buscaTabela(tabelaSimbolos, var_atribuicao_atual, &nivel_lex);
-            sprintf(exp, "ARMZ %d, %d", nivel_lex ,offset);
+            elemento_t elemento = malloc(sizeof(elemento_t));
+            elemento = buscaTabela(tabelaSimbolos, var_atribuicao_atual);
+            sprintf(exp, "ARMZ %d, %d",  elemento->nivel_lex ,  elemento->endereco);
             geraCodigo(NULL, exp);
             }
 ;
@@ -473,10 +469,9 @@ termo: termo ASTERISCO fator
 fator: IDENT {
       // CRVL
       char exp[10];
-      int offset;
-      int nivel_lex = 0;
-      offset = buscaTabela(tabelaSimbolos, token, &nivel_lex);
-      sprintf(exp, "CRVL %d, %d",  nivel_lex , offset);
+      elemento_t elemento = malloc(sizeof(elemento_t));
+      elemento = buscaTabela(tabelaSimbolos, token);
+      sprintf(exp, "CRVL %d, %d",  elemento->nivel_lex ,  elemento->endereco);
       geraCodigo(NULL, exp);
    } | 
    NUMERO

@@ -63,14 +63,18 @@ void abaixaTopo(tabelaSimbolos_t tabela){
     (tabela->head)--;
 }
 
-int buscaTabela(tabelaSimbolos_t tabela, char *simbolo, int *nivel){
+elemento_t buscaTabela(tabelaSimbolos_t tabela, char *simbolo){
+    elemento_t elemento = malloc(sizeof(elemento_t));
     for (int i = tabela->head; i >= 0; i--){
         if (strcmp((tabela->elementos[i])->simbolo, simbolo) == 0){
-            *nivel = tabela->elementos[i]->nivel_lex;
-            return tabela->elementos[i]->endereco;
+            strcpy(elemento->simbolo, tabela->elementos[i]->simbolo);
+            elemento->categoria = tabela->elementos[i]->categoria;
+            elemento->nivel_lex = tabela->elementos[i]->nivel_lex;
+            elemento->endereco = tabela->elementos[i]->endereco;
+            return elemento;
         }
     }
-    return (-1);
+    return NULL;
 }
 
 void freeTabela(tabelaSimbolos_t tabela) {
