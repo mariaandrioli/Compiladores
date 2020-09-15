@@ -87,107 +87,109 @@ Grammar
    35 procedure_function3: bloco PONTO_E_VIRGULA comando_composto
 
    36 declara_params: VAR params_ref
-   37               | VAR params_ref PONTO_E_VIRGULA declara_params
-   38               | params_valor PONTO_E_VIRGULA declara_params
+   37               | VAR params_ref declara_params2
+   38               | params_valor declara_params2
    39               | params_valor
 
-   40 params_valor: params_valor VIRGULA param_valor
-   41             | param_valor
+   40 declara_params2: PONTO_E_VIRGULA declara_params
 
-   42 param_valor: IDENT DOIS_PONTOS tipo_param_valor
+   41 params_valor: params_valor VIRGULA param_valor
+   42             | param_valor
 
-   43 tipo_param_valor: IDENT
+   43 param_valor: IDENT DOIS_PONTOS tipo_param_valor
 
-   44 params_ref: params_ref VIRGULA param_ref
-   45           | param_ref
+   44 tipo_param_valor: IDENT
 
-   46 param_ref: IDENT DOIS_PONTOS tipo_param_ref
+   45 params_ref: params_ref VIRGULA param_ref
+   46           | param_ref
 
-   47 tipo_param_ref: IDENT
+   47 param_ref: IDENT DOIS_PONTOS tipo_param_ref
 
-   48 retorno_func: IDENT
+   48 tipo_param_ref: IDENT
 
-   49 comandos: atribuicao PONTO_E_VIRGULA comandos
-   50         | atribuicao PONTO_E_VIRGULA
-   51         | atribuicao
-   52         | leitura PONTO_E_VIRGULA comandos
-   53         | leitura PONTO_E_VIRGULA
-   54         | leitura
-   55         | impressao PONTO_E_VIRGULA comandos
-   56         | impressao PONTO_E_VIRGULA
-   57         | impressao
-   58         | repeticao PONTO_E_VIRGULA comandos
-   59         | repeticao PONTO_E_VIRGULA
-   60         | repeticao
-   61         | condicao PONTO_E_VIRGULA comandos
-   62         | condicao PONTO_E_VIRGULA
-   63         | condicao
+   49 retorno_func: IDENT
 
-   64 $@5: %empty
+   50 comandos: atribuicao PONTO_E_VIRGULA comandos
+   51         | atribuicao PONTO_E_VIRGULA
+   52         | atribuicao
+   53         | leitura PONTO_E_VIRGULA comandos
+   54         | leitura PONTO_E_VIRGULA
+   55         | leitura
+   56         | impressao PONTO_E_VIRGULA comandos
+   57         | impressao PONTO_E_VIRGULA
+   58         | impressao
+   59         | repeticao PONTO_E_VIRGULA comandos
+   60         | repeticao PONTO_E_VIRGULA
+   61         | repeticao
+   62         | condicao PONTO_E_VIRGULA comandos
+   63         | condicao PONTO_E_VIRGULA
+   64         | condicao
 
-   65 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN condicao2
+   65 $@5: %empty
 
-   66 $@6: %empty
+   66 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN condicao2
 
-   67 condicao: IF expressao_booleana $@6 THEN condicao2
+   67 $@6: %empty
 
-   68 condicao2: condicao3 ELSE condicao4
-   69          | condicao3 ELSE T_BEGIN condicao4 T_END
-   70          | T_BEGIN condicao3 T_END ELSE condicao4
-   71          | T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 T_END
+   68 condicao: IF expressao_booleana $@6 THEN condicao2
 
-   72 condicao3: comandos
+   69 condicao2: condicao3 ELSE condicao4
+   70          | condicao3 ELSE T_BEGIN condicao4 T_END
+   71          | T_BEGIN condicao3 T_END ELSE condicao4
+   72          | T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 T_END
 
-   73 $@7: %empty
+   73 condicao3: comandos
 
-   74 condicao4: $@7 comandos
+   74 $@7: %empty
 
-   75 $@8: %empty
+   75 condicao4: $@7 comandos
 
-   76 repeticao: WHILE $@8 repeticao2
+   76 $@8: %empty
 
-   77 $@9: %empty
+   77 repeticao: WHILE $@8 repeticao2
 
-   78 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO $@9 repeticao3
+   78 $@9: %empty
 
-   79 $@10: %empty
+   79 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO $@9 repeticao3
 
-   80 repeticao2: expressao_booleana DO $@10 repeticao3
+   80 $@10: %empty
 
-   81 repeticao3: comando_composto
-   82           | comandos
+   81 repeticao2: expressao_booleana DO $@10 repeticao3
 
-   83 expressao_booleana: expressao
+   82 repeticao3: comando_composto
+   83           | comandos
 
-   84 $@11: %empty
+   84 expressao_booleana: expressao
 
-   85 $@12: %empty
+   85 $@11: %empty
 
-   86 atribuicao: IDENT $@11 ATRIBUICAO $@12 expressao
+   86 $@12: %empty
 
-   87 expressao: expressao_interna relacao expressao_interna
-   88          | expressao_interna
+   87 atribuicao: IDENT $@11 ATRIBUICAO $@12 expressao
 
-   89 relacao: MAIOR
-   90        | MENOR
-   91        | MAIOR_IGUAL
-   92        | MENOR_IGUAL
-   93        | IGUAL
-   94        | DESIGUAL
+   88 expressao: expressao_interna relacao expressao_interna
+   89          | expressao_interna
 
-   95 expressao_interna: expressao_interna MAIS termo
-   96                  | expressao_interna MENOS termo
-   97                  | expressao_interna OR termo
-   98                  | termo
+   90 relacao: MAIOR
+   91        | MENOR
+   92        | MAIOR_IGUAL
+   93        | MENOR_IGUAL
+   94        | IGUAL
+   95        | DESIGUAL
 
-   99 termo: termo ASTERISCO fator
-  100      | termo DIV fator
-  101      | termo AND fator
-  102      | fator
+   96 expressao_interna: expressao_interna MAIS termo
+   97                  | expressao_interna MENOS termo
+   98                  | expressao_interna OR termo
+   99                  | termo
 
-  103 fator: IDENT
-  104      | NUMERO
-  105      | ABRE_PARENTESES expressao FECHA_PARENTESES
+  100 termo: termo ASTERISCO fator
+  101      | termo DIV fator
+  102      | termo AND fator
+  103      | fator
+
+  104 fator: IDENT
+  105      | NUMERO
+  106      | ABRE_PARENTESES expressao FECHA_PARENTESES
 
 
 Terminals, with rules where they appear
@@ -195,18 +197,18 @@ Terminals, with rules where they appear
     $end (0) 0
     error (256)
     PROGRAM (258) 2
-    ABRE_PARENTESES (259) 3 20 24 33 65 78 105
-    FECHA_PARENTESES (260) 3 20 24 33 65 78 105
-    VIRGULA (261) 16 18 21 25 40 44
-    PONTO_E_VIRGULA (262) 3 4 14 31 32 35 37 38 49 50 52 53 55 56 58 59 61 62
-    DOIS_PONTOS (263) 14 32 42 46
+    ABRE_PARENTESES (259) 3 20 24 33 66 79 106
+    FECHA_PARENTESES (260) 3 20 24 33 66 79 106
+    VIRGULA (261) 16 18 21 25 41 45
+    PONTO_E_VIRGULA (262) 3 4 14 31 32 35 40 50 51 53 54 56 57 59 60 62 63
+    DOIS_PONTOS (263) 14 32 43 47
     PONTO (264) 3 4
-    T_BEGIN (265) 30 69 70 71
-    T_END (266) 30 69 70 71
+    T_BEGIN (265) 30 70 71 72
+    T_END (266) 30 70 71 72
     VAR (267) 9 36 37
-    IDENT (268) 2 15 16 17 18 19 23 27 31 32 42 43 46 47 48 86 103
-    ATRIBUICAO (269) 86
-    NUMERO (270) 28 104
+    IDENT (268) 2 15 16 17 18 19 23 27 31 32 43 44 47 48 49 87 104
+    ATRIBUICAO (269) 87
+    NUMERO (270) 28 105
     LABEL (271)
     TYPE (272)
     ARRAY (273)
@@ -216,28 +218,28 @@ Terminals, with rules where they appear
     INTEGER (277)
     BOOLEAN (278)
     GOTO (279)
-    IF (280) 65 67
-    THEN (281) 65 67
-    ELSE (282) 68 69 70 71
-    WHILE (283) 76
-    DO (284) 78 80
-    OR (285) 97
-    DIV (286) 100
-    AND (287) 101
+    IF (280) 66 68
+    THEN (281) 66 68
+    ELSE (282) 69 70 71 72
+    WHILE (283) 77
+    DO (284) 79 81
+    OR (285) 98
+    DIV (286) 101
+    AND (287) 102
     NOT (288)
     ABRE_CHAVES (289)
     FECHA_CHAVES (290)
     ABRE_COLCHETES (291)
     FECHA_COLCHETES (292)
-    IGUAL (293) 93
-    MAIOR (294) 89
-    MENOR (295) 90
-    DESIGUAL (296) 94
-    MAIOR_IGUAL (297) 91
-    MENOR_IGUAL (298) 92
-    MAIS (299) 95
-    MENOS (300) 96
-    ASTERISCO (301) 99
+    IGUAL (293) 94
+    MAIOR (294) 90
+    MENOR (295) 91
+    DESIGUAL (296) 95
+    MAIOR_IGUAL (297) 92
+    MENOR_IGUAL (298) 93
+    MAIS (299) 96
+    MENOS (300) 97
+    ASTERISCO (301) 100
     BARRA (302)
     READ (303) 20
     WRITE (304) 24
@@ -291,7 +293,7 @@ Nonterminals, with rules where they appear
         on right: 3 18
     leitura (65)
         on left: 20
-        on right: 52 53 54
+        on right: 53 54 55
     param_read (66)
         on left: 21 22
         on right: 20 21
@@ -300,7 +302,7 @@ Nonterminals, with rules where they appear
         on right: 21 22
     impressao (68)
         on left: 24
-        on right: 55 56 57
+        on right: 56 57 58
     param_write (69)
         on left: 25 26
         on right: 24 25
@@ -309,7 +311,7 @@ Nonterminals, with rules where they appear
         on right: 25 26
     comando_composto (71)
         on left: 29 30
-        on right: 6 35 81
+        on right: 6 35 82
     procedure_function (72)
         on left: 31 32
         on right: 29
@@ -321,97 +323,100 @@ Nonterminals, with rules where they appear
         on right: 31 32
     declara_params (75)
         on left: 36 37 38 39
-        on right: 33 37 38
-    params_valor (76)
-        on left: 40 41
-        on right: 38 39 40
-    param_valor (77)
-        on left: 42
-        on right: 40 41
-    tipo_param_valor (78)
+        on right: 33 40
+    declara_params2 (76)
+        on left: 40
+        on right: 37 38
+    params_valor (77)
+        on left: 41 42
+        on right: 38 39 41
+    param_valor (78)
         on left: 43
-        on right: 42
-    params_ref (79)
-        on left: 44 45
-        on right: 36 37 44
-    param_ref (80)
-        on left: 46
-        on right: 44 45
-    tipo_param_ref (81)
+        on right: 41 42
+    tipo_param_valor (79)
+        on left: 44
+        on right: 43
+    params_ref (80)
+        on left: 45 46
+        on right: 36 37 45
+    param_ref (81)
         on left: 47
-        on right: 46
-    retorno_func (82)
+        on right: 45 46
+    tipo_param_ref (82)
         on left: 48
+        on right: 47
+    retorno_func (83)
+        on left: 49
         on right: 32
-    comandos (83)
-        on left: 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
-        on right: 30 49 52 55 58 61 72 74 82
-    condicao (84)
-        on left: 65 67
-        on right: 61 62 63
-    $@5 (85)
-        on left: 64
-        on right: 65
-    $@6 (86)
-        on left: 66
-        on right: 67
-    condicao2 (87)
-        on left: 68 69 70 71
-        on right: 65 67
-    condicao3 (88)
-        on left: 72
-        on right: 68 69 70 71
-    condicao4 (89)
-        on left: 74
-        on right: 68 69 70 71
-    $@7 (90)
+    comandos (84)
+        on left: 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64
+        on right: 30 50 53 56 59 62 73 75 83
+    condicao (85)
+        on left: 66 68
+        on right: 62 63 64
+    $@5 (86)
+        on left: 65
+        on right: 66
+    $@6 (87)
+        on left: 67
+        on right: 68
+    condicao2 (88)
+        on left: 69 70 71 72
+        on right: 66 68
+    condicao3 (89)
         on left: 73
-        on right: 74
-    repeticao (91)
-        on left: 76
-        on right: 58 59 60
-    $@8 (92)
+        on right: 69 70 71 72
+    condicao4 (90)
         on left: 75
-        on right: 76
-    repeticao2 (93)
-        on left: 78 80
-        on right: 76
-    $@9 (94)
+        on right: 69 70 71 72
+    $@7 (91)
+        on left: 74
+        on right: 75
+    repeticao (92)
         on left: 77
-        on right: 78
-    $@10 (95)
-        on left: 79
-        on right: 80
-    repeticao3 (96)
-        on left: 81 82
-        on right: 78 80
-    expressao_booleana (97)
-        on left: 83
-        on right: 65 67 78 80
-    atribuicao (98)
-        on left: 86
-        on right: 49 50 51
-    $@11 (99)
+        on right: 59 60 61
+    $@8 (93)
+        on left: 76
+        on right: 77
+    repeticao2 (94)
+        on left: 79 81
+        on right: 77
+    $@9 (95)
+        on left: 78
+        on right: 79
+    $@10 (96)
+        on left: 80
+        on right: 81
+    repeticao3 (97)
+        on left: 82 83
+        on right: 79 81
+    expressao_booleana (98)
         on left: 84
-        on right: 86
-    $@12 (100)
+        on right: 66 68 79 81
+    atribuicao (99)
+        on left: 87
+        on right: 50 51 52
+    $@11 (100)
         on left: 85
-        on right: 86
-    expressao (101)
-        on left: 87 88
-        on right: 83 86 105
-    relacao (102)
-        on left: 89 90 91 92 93 94
         on right: 87
-    expressao_interna (103)
-        on left: 95 96 97 98
-        on right: 87 88 95 96 97
-    termo (104)
-        on left: 99 100 101 102
-        on right: 95 96 97 98 99 100 101
-    fator (105)
-        on left: 103 104 105
-        on right: 99 100 101 102
+    $@12 (101)
+        on left: 86
+        on right: 87
+    expressao (102)
+        on left: 88 89
+        on right: 84 87 106
+    relacao (103)
+        on left: 90 91 92 93 94 95
+        on right: 88
+    expressao_interna (104)
+        on left: 96 97 98 99
+        on right: 88 89 96 97 98
+    termo (105)
+        on left: 100 101 102 103
+        on right: 96 97 98 99 100 101 102
+    fator (106)
+        on left: 104 105 106
+        on right: 100 101 102 103
 
 
 State 0
@@ -684,17 +689,17 @@ State 30
 
 State 31
 
-   86 atribuicao: IDENT . $@11 ATRIBUICAO $@12 expressao
+   87 atribuicao: IDENT . $@11 ATRIBUICAO $@12 expressao
 
-    $default  reduce using rule 84 ($@11)
+    $default  reduce using rule 85 ($@11)
 
     $@11  go to state 48
 
 
 State 32
 
-   65 condicao: IF . ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN condicao2
-   67         | IF . expressao_booleana $@6 THEN condicao2
+   66 condicao: IF . ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN condicao2
+   68         | IF . expressao_booleana $@6 THEN condicao2
 
     ABRE_PARENTESES  shift, and go to state 49
     IDENT            shift, and go to state 50
@@ -709,9 +714,9 @@ State 32
 
 State 33
 
-   76 repeticao: WHILE . $@8 repeticao2
+   77 repeticao: WHILE . $@8 repeticao2
 
-    $default  reduce using rule 75 ($@8)
+    $default  reduce using rule 76 ($@8)
 
     $@8  go to state 57
 
@@ -732,26 +737,26 @@ State 35
 
 State 36
 
-   52 comandos: leitura . PONTO_E_VIRGULA comandos
-   53         | leitura . PONTO_E_VIRGULA
-   54         | leitura .
+   53 comandos: leitura . PONTO_E_VIRGULA comandos
+   54         | leitura . PONTO_E_VIRGULA
+   55         | leitura .
 
     PONTO_E_VIRGULA  shift, and go to state 60
 
-    PONTO_E_VIRGULA  [reduce using rule 54 (comandos)]
-    $default         reduce using rule 54 (comandos)
+    PONTO_E_VIRGULA  [reduce using rule 55 (comandos)]
+    $default         reduce using rule 55 (comandos)
 
 
 State 37
 
-   55 comandos: impressao . PONTO_E_VIRGULA comandos
-   56         | impressao . PONTO_E_VIRGULA
-   57         | impressao .
+   56 comandos: impressao . PONTO_E_VIRGULA comandos
+   57         | impressao . PONTO_E_VIRGULA
+   58         | impressao .
 
     PONTO_E_VIRGULA  shift, and go to state 61
 
-    PONTO_E_VIRGULA  [reduce using rule 57 (comandos)]
-    $default         reduce using rule 57 (comandos)
+    PONTO_E_VIRGULA  [reduce using rule 58 (comandos)]
+    $default         reduce using rule 58 (comandos)
 
 
 State 38
@@ -763,38 +768,38 @@ State 38
 
 State 39
 
-   61 comandos: condicao . PONTO_E_VIRGULA comandos
-   62         | condicao . PONTO_E_VIRGULA
-   63         | condicao .
+   62 comandos: condicao . PONTO_E_VIRGULA comandos
+   63         | condicao . PONTO_E_VIRGULA
+   64         | condicao .
 
     PONTO_E_VIRGULA  shift, and go to state 63
 
-    PONTO_E_VIRGULA  [reduce using rule 63 (comandos)]
-    $default         reduce using rule 63 (comandos)
+    PONTO_E_VIRGULA  [reduce using rule 64 (comandos)]
+    $default         reduce using rule 64 (comandos)
 
 
 State 40
 
-   58 comandos: repeticao . PONTO_E_VIRGULA comandos
-   59         | repeticao . PONTO_E_VIRGULA
-   60         | repeticao .
+   59 comandos: repeticao . PONTO_E_VIRGULA comandos
+   60         | repeticao . PONTO_E_VIRGULA
+   61         | repeticao .
 
     PONTO_E_VIRGULA  shift, and go to state 64
 
-    PONTO_E_VIRGULA  [reduce using rule 60 (comandos)]
-    $default         reduce using rule 60 (comandos)
+    PONTO_E_VIRGULA  [reduce using rule 61 (comandos)]
+    $default         reduce using rule 61 (comandos)
 
 
 State 41
 
-   49 comandos: atribuicao . PONTO_E_VIRGULA comandos
-   50         | atribuicao . PONTO_E_VIRGULA
-   51         | atribuicao .
+   50 comandos: atribuicao . PONTO_E_VIRGULA comandos
+   51         | atribuicao . PONTO_E_VIRGULA
+   52         | atribuicao .
 
     PONTO_E_VIRGULA  shift, and go to state 65
 
-    PONTO_E_VIRGULA  [reduce using rule 51 (comandos)]
-    $default         reduce using rule 51 (comandos)
+    PONTO_E_VIRGULA  [reduce using rule 52 (comandos)]
+    $default         reduce using rule 52 (comandos)
 
 
 State 42
@@ -851,15 +856,15 @@ State 47
 
 State 48
 
-   86 atribuicao: IDENT $@11 . ATRIBUICAO $@12 expressao
+   87 atribuicao: IDENT $@11 . ATRIBUICAO $@12 expressao
 
     ATRIBUICAO  shift, and go to state 71
 
 
 State 49
 
-   65 condicao: IF ABRE_PARENTESES . expressao_booleana $@5 FECHA_PARENTESES THEN condicao2
-  105 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
+   66 condicao: IF ABRE_PARENTESES . expressao_booleana $@5 FECHA_PARENTESES THEN condicao2
+  106 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -874,41 +879,41 @@ State 49
 
 State 50
 
-  103 fator: IDENT .
-
-    $default  reduce using rule 103 (fator)
-
-
-State 51
-
-  104 fator: NUMERO .
+  104 fator: IDENT .
 
     $default  reduce using rule 104 (fator)
 
 
+State 51
+
+  105 fator: NUMERO .
+
+    $default  reduce using rule 105 (fator)
+
+
 State 52
 
-   67 condicao: IF expressao_booleana . $@6 THEN condicao2
+   68 condicao: IF expressao_booleana . $@6 THEN condicao2
 
-    $default  reduce using rule 66 ($@6)
+    $default  reduce using rule 67 ($@6)
 
     $@6  go to state 75
 
 
 State 53
 
-   83 expressao_booleana: expressao .
+   84 expressao_booleana: expressao .
 
-    $default  reduce using rule 83 (expressao_booleana)
+    $default  reduce using rule 84 (expressao_booleana)
 
 
 State 54
 
-   87 expressao: expressao_interna . relacao expressao_interna
-   88          | expressao_interna .
-   95 expressao_interna: expressao_interna . MAIS termo
-   96                  | expressao_interna . MENOS termo
-   97                  | expressao_interna . OR termo
+   88 expressao: expressao_interna . relacao expressao_interna
+   89          | expressao_interna .
+   96 expressao_interna: expressao_interna . MAIS termo
+   97                  | expressao_interna . MENOS termo
+   98                  | expressao_interna . OR termo
 
     OR           shift, and go to state 76
     IGUAL        shift, and go to state 77
@@ -920,35 +925,35 @@ State 54
     MAIS         shift, and go to state 83
     MENOS        shift, and go to state 84
 
-    $default  reduce using rule 88 (expressao)
+    $default  reduce using rule 89 (expressao)
 
     relacao  go to state 85
 
 
 State 55
 
-   98 expressao_interna: termo .
-   99 termo: termo . ASTERISCO fator
-  100      | termo . DIV fator
-  101      | termo . AND fator
+   99 expressao_interna: termo .
+  100 termo: termo . ASTERISCO fator
+  101      | termo . DIV fator
+  102      | termo . AND fator
 
     DIV        shift, and go to state 86
     AND        shift, and go to state 87
     ASTERISCO  shift, and go to state 88
 
-    $default  reduce using rule 98 (expressao_interna)
+    $default  reduce using rule 99 (expressao_interna)
 
 
 State 56
 
-  102 termo: fator .
+  103 termo: fator .
 
-    $default  reduce using rule 102 (termo)
+    $default  reduce using rule 103 (termo)
 
 
 State 57
 
-   76 repeticao: WHILE $@8 . repeticao2
+   77 repeticao: WHILE $@8 . repeticao2
 
     ABRE_PARENTESES  shift, and go to state 89
     IDENT            shift, and go to state 50
@@ -985,8 +990,8 @@ State 59
 
 State 60
 
-   52 comandos: leitura PONTO_E_VIRGULA . comandos
-   53         | leitura PONTO_E_VIRGULA .
+   53 comandos: leitura PONTO_E_VIRGULA . comandos
+   54         | leitura PONTO_E_VIRGULA .
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -994,7 +999,7 @@ State 60
     READ   shift, and go to state 34
     WRITE  shift, and go to state 35
 
-    $default  reduce using rule 53 (comandos)
+    $default  reduce using rule 54 (comandos)
 
     leitura     go to state 36
     impressao   go to state 37
@@ -1006,8 +1011,8 @@ State 60
 
 State 61
 
-   55 comandos: impressao PONTO_E_VIRGULA . comandos
-   56         | impressao PONTO_E_VIRGULA .
+   56 comandos: impressao PONTO_E_VIRGULA . comandos
+   57         | impressao PONTO_E_VIRGULA .
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -1015,7 +1020,7 @@ State 61
     READ   shift, and go to state 34
     WRITE  shift, and go to state 35
 
-    $default  reduce using rule 56 (comandos)
+    $default  reduce using rule 57 (comandos)
 
     leitura     go to state 36
     impressao   go to state 37
@@ -1034,8 +1039,8 @@ State 62
 
 State 63
 
-   61 comandos: condicao PONTO_E_VIRGULA . comandos
-   62         | condicao PONTO_E_VIRGULA .
+   62 comandos: condicao PONTO_E_VIRGULA . comandos
+   63         | condicao PONTO_E_VIRGULA .
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -1043,7 +1048,7 @@ State 63
     READ   shift, and go to state 34
     WRITE  shift, and go to state 35
 
-    $default  reduce using rule 62 (comandos)
+    $default  reduce using rule 63 (comandos)
 
     leitura     go to state 36
     impressao   go to state 37
@@ -1055,8 +1060,8 @@ State 63
 
 State 64
 
-   58 comandos: repeticao PONTO_E_VIRGULA . comandos
-   59         | repeticao PONTO_E_VIRGULA .
+   59 comandos: repeticao PONTO_E_VIRGULA . comandos
+   60         | repeticao PONTO_E_VIRGULA .
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -1064,7 +1069,7 @@ State 64
     READ   shift, and go to state 34
     WRITE  shift, and go to state 35
 
-    $default  reduce using rule 59 (comandos)
+    $default  reduce using rule 60 (comandos)
 
     leitura     go to state 36
     impressao   go to state 37
@@ -1076,8 +1081,8 @@ State 64
 
 State 65
 
-   49 comandos: atribuicao PONTO_E_VIRGULA . comandos
-   50         | atribuicao PONTO_E_VIRGULA .
+   50 comandos: atribuicao PONTO_E_VIRGULA . comandos
+   51         | atribuicao PONTO_E_VIRGULA .
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -1085,7 +1090,7 @@ State 65
     READ   shift, and go to state 34
     WRITE  shift, and go to state 35
 
-    $default  reduce using rule 50 (comandos)
+    $default  reduce using rule 51 (comandos)
 
     leitura     go to state 36
     impressao   go to state 37
@@ -1139,16 +1144,16 @@ State 70
 
 State 71
 
-   86 atribuicao: IDENT $@11 ATRIBUICAO . $@12 expressao
+   87 atribuicao: IDENT $@11 ATRIBUICAO . $@12 expressao
 
-    $default  reduce using rule 85 ($@12)
+    $default  reduce using rule 86 ($@12)
 
     $@12  go to state 114
 
 
 State 72
 
-  105 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
+  106 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1162,33 +1167,33 @@ State 72
 
 State 73
 
-   65 condicao: IF ABRE_PARENTESES expressao_booleana . $@5 FECHA_PARENTESES THEN condicao2
+   66 condicao: IF ABRE_PARENTESES expressao_booleana . $@5 FECHA_PARENTESES THEN condicao2
 
-    $default  reduce using rule 64 ($@5)
+    $default  reduce using rule 65 ($@5)
 
     $@5  go to state 116
 
 
 State 74
 
-   83 expressao_booleana: expressao .
-  105 fator: ABRE_PARENTESES expressao . FECHA_PARENTESES
+   84 expressao_booleana: expressao .
+  106 fator: ABRE_PARENTESES expressao . FECHA_PARENTESES
 
     FECHA_PARENTESES  shift, and go to state 117
 
-    FECHA_PARENTESES  [reduce using rule 83 (expressao_booleana)]
+    FECHA_PARENTESES  [reduce using rule 84 (expressao_booleana)]
 
 
 State 75
 
-   67 condicao: IF expressao_booleana $@6 . THEN condicao2
+   68 condicao: IF expressao_booleana $@6 . THEN condicao2
 
     THEN  shift, and go to state 118
 
 
 State 76
 
-   97 expressao_interna: expressao_interna OR . termo
+   98 expressao_interna: expressao_interna OR . termo
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1200,49 +1205,49 @@ State 76
 
 State 77
 
-   93 relacao: IGUAL .
-
-    $default  reduce using rule 93 (relacao)
-
-
-State 78
-
-   89 relacao: MAIOR .
-
-    $default  reduce using rule 89 (relacao)
-
-
-State 79
-
-   90 relacao: MENOR .
-
-    $default  reduce using rule 90 (relacao)
-
-
-State 80
-
-   94 relacao: DESIGUAL .
+   94 relacao: IGUAL .
 
     $default  reduce using rule 94 (relacao)
 
 
-State 81
+State 78
 
-   91 relacao: MAIOR_IGUAL .
+   90 relacao: MAIOR .
+
+    $default  reduce using rule 90 (relacao)
+
+
+State 79
+
+   91 relacao: MENOR .
 
     $default  reduce using rule 91 (relacao)
 
 
-State 82
+State 80
 
-   92 relacao: MENOR_IGUAL .
+   95 relacao: DESIGUAL .
+
+    $default  reduce using rule 95 (relacao)
+
+
+State 81
+
+   92 relacao: MAIOR_IGUAL .
 
     $default  reduce using rule 92 (relacao)
 
 
+State 82
+
+   93 relacao: MENOR_IGUAL .
+
+    $default  reduce using rule 93 (relacao)
+
+
 State 83
 
-   95 expressao_interna: expressao_interna MAIS . termo
+   96 expressao_interna: expressao_interna MAIS . termo
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1254,7 +1259,7 @@ State 83
 
 State 84
 
-   96 expressao_interna: expressao_interna MENOS . termo
+   97 expressao_interna: expressao_interna MENOS . termo
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1266,7 +1271,7 @@ State 84
 
 State 85
 
-   87 expressao: expressao_interna relacao . expressao_interna
+   88 expressao: expressao_interna relacao . expressao_interna
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1279,7 +1284,7 @@ State 85
 
 State 86
 
-  100 termo: termo DIV . fator
+  101 termo: termo DIV . fator
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1290,7 +1295,7 @@ State 86
 
 State 87
 
-  101 termo: termo AND . fator
+  102 termo: termo AND . fator
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1301,7 +1306,7 @@ State 87
 
 State 88
 
-   99 termo: termo ASTERISCO . fator
+  100 termo: termo ASTERISCO . fator
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1312,8 +1317,8 @@ State 88
 
 State 89
 
-   78 repeticao2: ABRE_PARENTESES . expressao_booleana FECHA_PARENTESES DO $@9 repeticao3
-  105 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
+   79 repeticao2: ABRE_PARENTESES . expressao_booleana FECHA_PARENTESES DO $@9 repeticao3
+  106 fator: ABRE_PARENTESES . expressao FECHA_PARENTESES
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
@@ -1328,14 +1333,14 @@ State 89
 
 State 90
 
-   76 repeticao: WHILE $@8 repeticao2 .
+   77 repeticao: WHILE $@8 repeticao2 .
 
-    $default  reduce using rule 76 (repeticao)
+    $default  reduce using rule 77 (repeticao)
 
 
 State 91
 
-   80 repeticao2: expressao_booleana . DO $@10 repeticao3
+   81 repeticao2: expressao_booleana . DO $@10 repeticao3
 
     DO  shift, and go to state 127
 
@@ -1395,43 +1400,43 @@ State 98
 
 State 99
 
-   52 comandos: leitura PONTO_E_VIRGULA comandos .
+   53 comandos: leitura PONTO_E_VIRGULA comandos .
 
-    $default  reduce using rule 52 (comandos)
+    $default  reduce using rule 53 (comandos)
 
 
 State 100
 
-   55 comandos: impressao PONTO_E_VIRGULA comandos .
+   56 comandos: impressao PONTO_E_VIRGULA comandos .
 
-    $default  reduce using rule 55 (comandos)
+    $default  reduce using rule 56 (comandos)
 
 
 State 101
 
-   61 comandos: condicao PONTO_E_VIRGULA comandos .
+   62 comandos: condicao PONTO_E_VIRGULA comandos .
 
-    $default  reduce using rule 61 (comandos)
+    $default  reduce using rule 62 (comandos)
 
 
 State 102
 
-   58 comandos: repeticao PONTO_E_VIRGULA comandos .
+   59 comandos: repeticao PONTO_E_VIRGULA comandos .
 
-    $default  reduce using rule 58 (comandos)
+    $default  reduce using rule 59 (comandos)
 
 
 State 103
 
-   49 comandos: atribuicao PONTO_E_VIRGULA comandos .
+   50 comandos: atribuicao PONTO_E_VIRGULA comandos .
 
-    $default  reduce using rule 49 (comandos)
+    $default  reduce using rule 50 (comandos)
 
 
 State 104
 
    36 declara_params: VAR . params_ref
-   37               | VAR . params_ref PONTO_E_VIRGULA declara_params
+   37               | VAR . params_ref declara_params2
 
     IDENT  shift, and go to state 132
 
@@ -1441,7 +1446,7 @@ State 104
 
 State 105
 
-   42 param_valor: IDENT . DOIS_PONTOS tipo_param_valor
+   43 param_valor: IDENT . DOIS_PONTOS tipo_param_valor
 
     DOIS_PONTOS  shift, and go to state 135
 
@@ -1455,21 +1460,23 @@ State 106
 
 State 107
 
-   38 declara_params: params_valor . PONTO_E_VIRGULA declara_params
+   38 declara_params: params_valor . declara_params2
    39               | params_valor .
-   40 params_valor: params_valor . VIRGULA param_valor
+   41 params_valor: params_valor . VIRGULA param_valor
 
     VIRGULA          shift, and go to state 137
     PONTO_E_VIRGULA  shift, and go to state 138
 
     $default  reduce using rule 39 (declara_params)
 
+    declara_params2  go to state 139
+
 
 State 108
 
-   41 params_valor: param_valor .
+   42 params_valor: param_valor .
 
-    $default  reduce using rule 41 (params_valor)
+    $default  reduce using rule 42 (params_valor)
 
 
 State 109
@@ -1479,20 +1486,20 @@ State 109
     VAR       reduce using rule 8 ($@3)
     $default  reduce using rule 10 (var)
 
-    bloco                go to state 139
+    bloco                go to state 140
     parte_declara_vars   go to state 12
     var                  go to state 13
     $@3                  go to state 14
-    procedure_function3  go to state 140
+    procedure_function3  go to state 141
 
 
 State 110
 
    32 procedure_function: FUNCTION IDENT procedure_function2 DOIS_PONTOS . retorno_func PONTO_E_VIRGULA procedure_function3
 
-    IDENT  shift, and go to state 141
+    IDENT  shift, and go to state 142
 
-    retorno_func  go to state 142
+    retorno_func  go to state 143
 
 
 State 111
@@ -1513,18 +1520,18 @@ State 113
 
    14 declara_var: $@4 lista_id_var DOIS_PONTOS tipo . PONTO_E_VIRGULA
 
-    PONTO_E_VIRGULA  shift, and go to state 143
+    PONTO_E_VIRGULA  shift, and go to state 144
 
 
 State 114
 
-   86 atribuicao: IDENT $@11 ATRIBUICAO $@12 . expressao
+   87 atribuicao: IDENT $@11 ATRIBUICAO $@12 . expressao
 
     ABRE_PARENTESES  shift, and go to state 72
     IDENT            shift, and go to state 50
     NUMERO           shift, and go to state 51
 
-    expressao          go to state 144
+    expressao          go to state 145
     expressao_interna  go to state 54
     termo              go to state 55
     fator              go to state 56
@@ -1532,30 +1539,30 @@ State 114
 
 State 115
 
-  105 fator: ABRE_PARENTESES expressao . FECHA_PARENTESES
+  106 fator: ABRE_PARENTESES expressao . FECHA_PARENTESES
 
     FECHA_PARENTESES  shift, and go to state 117
 
 
 State 116
 
-   65 condicao: IF ABRE_PARENTESES expressao_booleana $@5 . FECHA_PARENTESES THEN condicao2
+   66 condicao: IF ABRE_PARENTESES expressao_booleana $@5 . FECHA_PARENTESES THEN condicao2
 
-    FECHA_PARENTESES  shift, and go to state 145
+    FECHA_PARENTESES  shift, and go to state 146
 
 
 State 117
 
-  105 fator: ABRE_PARENTESES expressao FECHA_PARENTESES .
+  106 fator: ABRE_PARENTESES expressao FECHA_PARENTESES .
 
-    $default  reduce using rule 105 (fator)
+    $default  reduce using rule 106 (fator)
 
 
 State 118
 
-   67 condicao: IF expressao_booleana $@6 THEN . condicao2
+   68 condicao: IF expressao_booleana $@6 THEN . condicao2
 
-    T_BEGIN  shift, and go to state 146
+    T_BEGIN  shift, and go to state 147
     IDENT    shift, and go to state 31
     IF       shift, and go to state 32
     WHILE    shift, and go to state 33
@@ -1564,48 +1571,34 @@ State 118
 
     leitura     go to state 36
     impressao   go to state 37
-    comandos    go to state 147
+    comandos    go to state 148
     condicao    go to state 39
-    condicao2   go to state 148
-    condicao3   go to state 149
+    condicao2   go to state 149
+    condicao3   go to state 150
     repeticao   go to state 40
     atribuicao  go to state 41
 
 
 State 119
 
-   97 expressao_interna: expressao_interna OR termo .
-   99 termo: termo . ASTERISCO fator
-  100      | termo . DIV fator
-  101      | termo . AND fator
+   98 expressao_interna: expressao_interna OR termo .
+  100 termo: termo . ASTERISCO fator
+  101      | termo . DIV fator
+  102      | termo . AND fator
 
     DIV        shift, and go to state 86
     AND        shift, and go to state 87
     ASTERISCO  shift, and go to state 88
 
-    $default  reduce using rule 97 (expressao_interna)
+    $default  reduce using rule 98 (expressao_interna)
 
 
 State 120
 
-   95 expressao_interna: expressao_interna MAIS termo .
-   99 termo: termo . ASTERISCO fator
-  100      | termo . DIV fator
-  101      | termo . AND fator
-
-    DIV        shift, and go to state 86
-    AND        shift, and go to state 87
-    ASTERISCO  shift, and go to state 88
-
-    $default  reduce using rule 95 (expressao_interna)
-
-
-State 121
-
-   96 expressao_interna: expressao_interna MENOS termo .
-   99 termo: termo . ASTERISCO fator
-  100      | termo . DIV fator
-  101      | termo . AND fator
+   96 expressao_interna: expressao_interna MAIS termo .
+  100 termo: termo . ASTERISCO fator
+  101      | termo . DIV fator
+  102      | termo . AND fator
 
     DIV        shift, and go to state 86
     AND        shift, and go to state 87
@@ -1614,55 +1607,69 @@ State 121
     $default  reduce using rule 96 (expressao_interna)
 
 
+State 121
+
+   97 expressao_interna: expressao_interna MENOS termo .
+  100 termo: termo . ASTERISCO fator
+  101      | termo . DIV fator
+  102      | termo . AND fator
+
+    DIV        shift, and go to state 86
+    AND        shift, and go to state 87
+    ASTERISCO  shift, and go to state 88
+
+    $default  reduce using rule 97 (expressao_interna)
+
+
 State 122
 
-   87 expressao: expressao_interna relacao expressao_interna .
-   95 expressao_interna: expressao_interna . MAIS termo
-   96                  | expressao_interna . MENOS termo
-   97                  | expressao_interna . OR termo
+   88 expressao: expressao_interna relacao expressao_interna .
+   96 expressao_interna: expressao_interna . MAIS termo
+   97                  | expressao_interna . MENOS termo
+   98                  | expressao_interna . OR termo
 
     OR     shift, and go to state 76
     MAIS   shift, and go to state 83
     MENOS  shift, and go to state 84
 
-    $default  reduce using rule 87 (expressao)
+    $default  reduce using rule 88 (expressao)
 
 
 State 123
 
-  100 termo: termo DIV fator .
-
-    $default  reduce using rule 100 (termo)
-
-
-State 124
-
-  101 termo: termo AND fator .
+  101 termo: termo DIV fator .
 
     $default  reduce using rule 101 (termo)
 
 
+State 124
+
+  102 termo: termo AND fator .
+
+    $default  reduce using rule 102 (termo)
+
+
 State 125
 
-   99 termo: termo ASTERISCO fator .
+  100 termo: termo ASTERISCO fator .
 
-    $default  reduce using rule 99 (termo)
+    $default  reduce using rule 100 (termo)
 
 
 State 126
 
-   78 repeticao2: ABRE_PARENTESES expressao_booleana . FECHA_PARENTESES DO $@9 repeticao3
+   79 repeticao2: ABRE_PARENTESES expressao_booleana . FECHA_PARENTESES DO $@9 repeticao3
 
-    FECHA_PARENTESES  shift, and go to state 150
+    FECHA_PARENTESES  shift, and go to state 151
 
 
 State 127
 
-   80 repeticao2: expressao_booleana DO . $@10 repeticao3
+   81 repeticao2: expressao_booleana DO . $@10 repeticao3
 
-    $default  reduce using rule 79 ($@10)
+    $default  reduce using rule 80 ($@10)
 
-    $@10  go to state 151
+    $@10  go to state 152
 
 
 State 128
@@ -1678,7 +1685,7 @@ State 129
 
     IDENT  shift, and go to state 92
 
-    read  go to state 152
+    read  go to state 153
 
 
 State 130
@@ -1695,42 +1702,44 @@ State 131
     IDENT   shift, and go to state 95
     NUMERO  shift, and go to state 96
 
-    write  go to state 153
+    write  go to state 154
 
 
 State 132
 
-   46 param_ref: IDENT . DOIS_PONTOS tipo_param_ref
+   47 param_ref: IDENT . DOIS_PONTOS tipo_param_ref
 
-    DOIS_PONTOS  shift, and go to state 154
+    DOIS_PONTOS  shift, and go to state 155
 
 
 State 133
 
    36 declara_params: VAR params_ref .
-   37               | VAR params_ref . PONTO_E_VIRGULA declara_params
-   44 params_ref: params_ref . VIRGULA param_ref
+   37               | VAR params_ref . declara_params2
+   45 params_ref: params_ref . VIRGULA param_ref
 
-    VIRGULA          shift, and go to state 155
-    PONTO_E_VIRGULA  shift, and go to state 156
+    VIRGULA          shift, and go to state 156
+    PONTO_E_VIRGULA  shift, and go to state 138
 
     $default  reduce using rule 36 (declara_params)
+
+    declara_params2  go to state 157
 
 
 State 134
 
-   45 params_ref: param_ref .
+   46 params_ref: param_ref .
 
-    $default  reduce using rule 45 (params_ref)
+    $default  reduce using rule 46 (params_ref)
 
 
 State 135
 
-   42 param_valor: IDENT DOIS_PONTOS . tipo_param_valor
+   43 param_valor: IDENT DOIS_PONTOS . tipo_param_valor
 
-    IDENT  shift, and go to state 157
+    IDENT  shift, and go to state 158
 
-    tipo_param_valor  go to state 158
+    tipo_param_valor  go to state 159
 
 
 State 136
@@ -1742,78 +1751,85 @@ State 136
 
 State 137
 
-   40 params_valor: params_valor VIRGULA . param_valor
+   41 params_valor: params_valor VIRGULA . param_valor
 
     IDENT  shift, and go to state 105
 
-    param_valor  go to state 159
+    param_valor  go to state 160
 
 
 State 138
 
-   38 declara_params: params_valor PONTO_E_VIRGULA . declara_params
+   40 declara_params2: PONTO_E_VIRGULA . declara_params
 
     VAR    shift, and go to state 104
     IDENT  shift, and go to state 105
 
-    declara_params  go to state 160
+    declara_params  go to state 161
     params_valor    go to state 107
     param_valor     go to state 108
 
 
 State 139
 
-   35 procedure_function3: bloco . PONTO_E_VIRGULA comando_composto
+   38 declara_params: params_valor declara_params2 .
 
-    PONTO_E_VIRGULA  shift, and go to state 161
+    $default  reduce using rule 38 (declara_params)
 
 
 State 140
+
+   35 procedure_function3: bloco . PONTO_E_VIRGULA comando_composto
+
+    PONTO_E_VIRGULA  shift, and go to state 162
+
+
+State 141
 
    31 procedure_function: PROCEDURE IDENT procedure_function2 PONTO_E_VIRGULA procedure_function3 .
 
     $default  reduce using rule 31 (procedure_function)
 
 
-State 141
-
-   48 retorno_func: IDENT .
-
-    $default  reduce using rule 48 (retorno_func)
-
-
 State 142
 
-   32 procedure_function: FUNCTION IDENT procedure_function2 DOIS_PONTOS retorno_func . PONTO_E_VIRGULA procedure_function3
+   49 retorno_func: IDENT .
 
-    PONTO_E_VIRGULA  shift, and go to state 162
+    $default  reduce using rule 49 (retorno_func)
 
 
 State 143
+
+   32 procedure_function: FUNCTION IDENT procedure_function2 DOIS_PONTOS retorno_func . PONTO_E_VIRGULA procedure_function3
+
+    PONTO_E_VIRGULA  shift, and go to state 163
+
+
+State 144
 
    14 declara_var: $@4 lista_id_var DOIS_PONTOS tipo PONTO_E_VIRGULA .
 
     $default  reduce using rule 14 (declara_var)
 
 
-State 144
-
-   86 atribuicao: IDENT $@11 ATRIBUICAO $@12 expressao .
-
-    $default  reduce using rule 86 (atribuicao)
-
-
 State 145
 
-   65 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES . THEN condicao2
+   87 atribuicao: IDENT $@11 ATRIBUICAO $@12 expressao .
 
-    THEN  shift, and go to state 163
+    $default  reduce using rule 87 (atribuicao)
 
 
 State 146
 
-   70 condicao2: T_BEGIN . condicao3 T_END ELSE condicao4
-   71          | T_BEGIN . condicao3 T_END ELSE T_BEGIN condicao4 T_END
+   66 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES . THEN condicao2
+
+    THEN  shift, and go to state 164
+
+
+State 147
+
+   71 condicao2: T_BEGIN . condicao3 T_END ELSE condicao4
+   72          | T_BEGIN . condicao3 T_END ELSE T_BEGIN condicao4 T_END
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -1823,45 +1839,45 @@ State 146
 
     leitura     go to state 36
     impressao   go to state 37
-    comandos    go to state 147
+    comandos    go to state 148
     condicao    go to state 39
-    condicao3   go to state 164
+    condicao3   go to state 165
     repeticao   go to state 40
     atribuicao  go to state 41
 
 
-State 147
-
-   72 condicao3: comandos .
-
-    $default  reduce using rule 72 (condicao3)
-
-
 State 148
 
-   67 condicao: IF expressao_booleana $@6 THEN condicao2 .
+   73 condicao3: comandos .
 
-    $default  reduce using rule 67 (condicao)
+    $default  reduce using rule 73 (condicao3)
 
 
 State 149
 
-   68 condicao2: condicao3 . ELSE condicao4
-   69          | condicao3 . ELSE T_BEGIN condicao4 T_END
+   68 condicao: IF expressao_booleana $@6 THEN condicao2 .
 
-    ELSE  shift, and go to state 165
+    $default  reduce using rule 68 (condicao)
 
 
 State 150
 
-   78 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES . DO $@9 repeticao3
+   69 condicao2: condicao3 . ELSE condicao4
+   70          | condicao3 . ELSE T_BEGIN condicao4 T_END
 
-    DO  shift, and go to state 166
+    ELSE  shift, and go to state 166
 
 
 State 151
 
-   80 repeticao2: expressao_booleana DO $@10 . repeticao3
+   79 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES . DO $@9 repeticao3
+
+    DO  shift, and go to state 167
+
+
+State 152
+
+   81 repeticao2: expressao_booleana DO $@10 . repeticao3
 
     T_BEGIN    shift, and go to state 22
     IDENT      shift, and go to state 31
@@ -1874,88 +1890,83 @@ State 151
 
     leitura             go to state 36
     impressao           go to state 37
-    comando_composto    go to state 167
+    comando_composto    go to state 168
     procedure_function  go to state 26
-    comandos            go to state 168
+    comandos            go to state 169
     condicao            go to state 39
     repeticao           go to state 40
-    repeticao3          go to state 169
+    repeticao3          go to state 170
     atribuicao          go to state 41
 
 
-State 152
+State 153
 
    21 param_read: param_read VIRGULA read .
 
     $default  reduce using rule 21 (param_read)
 
 
-State 153
+State 154
 
    25 param_write: param_write VIRGULA write .
 
     $default  reduce using rule 25 (param_write)
 
 
-State 154
-
-   46 param_ref: IDENT DOIS_PONTOS . tipo_param_ref
-
-    IDENT  shift, and go to state 170
-
-    tipo_param_ref  go to state 171
-
-
 State 155
 
-   44 params_ref: params_ref VIRGULA . param_ref
+   47 param_ref: IDENT DOIS_PONTOS . tipo_param_ref
 
-    IDENT  shift, and go to state 132
+    IDENT  shift, and go to state 171
 
-    param_ref  go to state 172
+    tipo_param_ref  go to state 172
 
 
 State 156
 
-   37 declara_params: VAR params_ref PONTO_E_VIRGULA . declara_params
+   45 params_ref: params_ref VIRGULA . param_ref
 
-    VAR    shift, and go to state 104
-    IDENT  shift, and go to state 105
+    IDENT  shift, and go to state 132
 
-    declara_params  go to state 173
-    params_valor    go to state 107
-    param_valor     go to state 108
+    param_ref  go to state 173
 
 
 State 157
 
-   43 tipo_param_valor: IDENT .
+   37 declara_params: VAR params_ref declara_params2 .
 
-    $default  reduce using rule 43 (tipo_param_valor)
+    $default  reduce using rule 37 (declara_params)
 
 
 State 158
 
-   42 param_valor: IDENT DOIS_PONTOS tipo_param_valor .
+   44 tipo_param_valor: IDENT .
 
-    $default  reduce using rule 42 (param_valor)
+    $default  reduce using rule 44 (tipo_param_valor)
 
 
 State 159
 
-   40 params_valor: params_valor VIRGULA param_valor .
+   43 param_valor: IDENT DOIS_PONTOS tipo_param_valor .
 
-    $default  reduce using rule 40 (params_valor)
+    $default  reduce using rule 43 (param_valor)
 
 
 State 160
 
-   38 declara_params: params_valor PONTO_E_VIRGULA declara_params .
+   41 params_valor: params_valor VIRGULA param_valor .
 
-    $default  reduce using rule 38 (declara_params)
+    $default  reduce using rule 41 (params_valor)
 
 
 State 161
+
+   40 declara_params2: PONTO_E_VIRGULA declara_params .
+
+    $default  reduce using rule 40 (declara_params2)
+
+
+State 162
 
    35 procedure_function3: bloco PONTO_E_VIRGULA . comando_composto
 
@@ -1967,25 +1978,25 @@ State 161
     procedure_function  go to state 26
 
 
-State 162
+State 163
 
    32 procedure_function: FUNCTION IDENT procedure_function2 DOIS_PONTOS retorno_func PONTO_E_VIRGULA . procedure_function3
 
     VAR       reduce using rule 8 ($@3)
     $default  reduce using rule 10 (var)
 
-    bloco                go to state 139
+    bloco                go to state 140
     parte_declara_vars   go to state 12
     var                  go to state 13
     $@3                  go to state 14
     procedure_function3  go to state 175
 
 
-State 163
+State 164
 
-   65 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN . condicao2
+   66 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN . condicao2
 
-    T_BEGIN  shift, and go to state 146
+    T_BEGIN  shift, and go to state 147
     IDENT    shift, and go to state 31
     IF       shift, and go to state 32
     WHILE    shift, and go to state 33
@@ -1994,91 +2005,84 @@ State 163
 
     leitura     go to state 36
     impressao   go to state 37
-    comandos    go to state 147
+    comandos    go to state 148
     condicao    go to state 39
     condicao2   go to state 176
-    condicao3   go to state 149
+    condicao3   go to state 150
     repeticao   go to state 40
     atribuicao  go to state 41
 
 
-State 164
+State 165
 
-   70 condicao2: T_BEGIN condicao3 . T_END ELSE condicao4
-   71          | T_BEGIN condicao3 . T_END ELSE T_BEGIN condicao4 T_END
+   71 condicao2: T_BEGIN condicao3 . T_END ELSE condicao4
+   72          | T_BEGIN condicao3 . T_END ELSE T_BEGIN condicao4 T_END
 
     T_END  shift, and go to state 177
 
 
-State 165
+State 166
 
-   68 condicao2: condicao3 ELSE . condicao4
-   69          | condicao3 ELSE . T_BEGIN condicao4 T_END
+   69 condicao2: condicao3 ELSE . condicao4
+   70          | condicao3 ELSE . T_BEGIN condicao4 T_END
 
     T_BEGIN  shift, and go to state 178
 
-    $default  reduce using rule 73 ($@7)
+    $default  reduce using rule 74 ($@7)
 
     condicao4  go to state 179
     $@7        go to state 180
 
 
-State 166
+State 167
 
-   78 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO . $@9 repeticao3
+   79 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO . $@9 repeticao3
 
-    $default  reduce using rule 77 ($@9)
+    $default  reduce using rule 78 ($@9)
 
     $@9  go to state 181
 
 
-State 167
-
-   81 repeticao3: comando_composto .
-
-    $default  reduce using rule 81 (repeticao3)
-
-
 State 168
 
-   82 repeticao3: comandos .
+   82 repeticao3: comando_composto .
 
     $default  reduce using rule 82 (repeticao3)
 
 
 State 169
 
-   80 repeticao2: expressao_booleana DO $@10 repeticao3 .
+   83 repeticao3: comandos .
 
-    $default  reduce using rule 80 (repeticao2)
+    $default  reduce using rule 83 (repeticao3)
 
 
 State 170
 
-   47 tipo_param_ref: IDENT .
+   81 repeticao2: expressao_booleana DO $@10 repeticao3 .
 
-    $default  reduce using rule 47 (tipo_param_ref)
+    $default  reduce using rule 81 (repeticao2)
 
 
 State 171
 
-   46 param_ref: IDENT DOIS_PONTOS tipo_param_ref .
+   48 tipo_param_ref: IDENT .
 
-    $default  reduce using rule 46 (param_ref)
+    $default  reduce using rule 48 (tipo_param_ref)
 
 
 State 172
 
-   44 params_ref: params_ref VIRGULA param_ref .
+   47 param_ref: IDENT DOIS_PONTOS tipo_param_ref .
 
-    $default  reduce using rule 44 (params_ref)
+    $default  reduce using rule 47 (param_ref)
 
 
 State 173
 
-   37 declara_params: VAR params_ref PONTO_E_VIRGULA declara_params .
+   45 params_ref: params_ref VIRGULA param_ref .
 
-    $default  reduce using rule 37 (declara_params)
+    $default  reduce using rule 45 (params_ref)
 
 
 State 174
@@ -2097,24 +2101,24 @@ State 175
 
 State 176
 
-   65 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN condicao2 .
+   66 condicao: IF ABRE_PARENTESES expressao_booleana $@5 FECHA_PARENTESES THEN condicao2 .
 
-    $default  reduce using rule 65 (condicao)
+    $default  reduce using rule 66 (condicao)
 
 
 State 177
 
-   70 condicao2: T_BEGIN condicao3 T_END . ELSE condicao4
-   71          | T_BEGIN condicao3 T_END . ELSE T_BEGIN condicao4 T_END
+   71 condicao2: T_BEGIN condicao3 T_END . ELSE condicao4
+   72          | T_BEGIN condicao3 T_END . ELSE T_BEGIN condicao4 T_END
 
     ELSE  shift, and go to state 182
 
 
 State 178
 
-   69 condicao2: condicao3 ELSE T_BEGIN . condicao4 T_END
+   70 condicao2: condicao3 ELSE T_BEGIN . condicao4 T_END
 
-    $default  reduce using rule 73 ($@7)
+    $default  reduce using rule 74 ($@7)
 
     condicao4  go to state 183
     $@7        go to state 180
@@ -2122,14 +2126,14 @@ State 178
 
 State 179
 
-   68 condicao2: condicao3 ELSE condicao4 .
+   69 condicao2: condicao3 ELSE condicao4 .
 
-    $default  reduce using rule 68 (condicao2)
+    $default  reduce using rule 69 (condicao2)
 
 
 State 180
 
-   74 condicao4: $@7 . comandos
+   75 condicao4: $@7 . comandos
 
     IDENT  shift, and go to state 31
     IF     shift, and go to state 32
@@ -2147,7 +2151,7 @@ State 180
 
 State 181
 
-   78 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO $@9 . repeticao3
+   79 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO $@9 . repeticao3
 
     T_BEGIN    shift, and go to state 22
     IDENT      shift, and go to state 31
@@ -2160,9 +2164,9 @@ State 181
 
     leitura             go to state 36
     impressao           go to state 37
-    comando_composto    go to state 167
+    comando_composto    go to state 168
     procedure_function  go to state 26
-    comandos            go to state 168
+    comandos            go to state 169
     condicao            go to state 39
     repeticao           go to state 40
     repeticao3          go to state 185
@@ -2171,12 +2175,12 @@ State 181
 
 State 182
 
-   70 condicao2: T_BEGIN condicao3 T_END ELSE . condicao4
-   71          | T_BEGIN condicao3 T_END ELSE . T_BEGIN condicao4 T_END
+   71 condicao2: T_BEGIN condicao3 T_END ELSE . condicao4
+   72          | T_BEGIN condicao3 T_END ELSE . T_BEGIN condicao4 T_END
 
     T_BEGIN  shift, and go to state 186
 
-    $default  reduce using rule 73 ($@7)
+    $default  reduce using rule 74 ($@7)
 
     condicao4  go to state 187
     $@7        go to state 180
@@ -2184,30 +2188,30 @@ State 182
 
 State 183
 
-   69 condicao2: condicao3 ELSE T_BEGIN condicao4 . T_END
+   70 condicao2: condicao3 ELSE T_BEGIN condicao4 . T_END
 
     T_END  shift, and go to state 188
 
 
 State 184
 
-   74 condicao4: $@7 comandos .
+   75 condicao4: $@7 comandos .
 
-    $default  reduce using rule 74 (condicao4)
+    $default  reduce using rule 75 (condicao4)
 
 
 State 185
 
-   78 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO $@9 repeticao3 .
+   79 repeticao2: ABRE_PARENTESES expressao_booleana FECHA_PARENTESES DO $@9 repeticao3 .
 
-    $default  reduce using rule 78 (repeticao2)
+    $default  reduce using rule 79 (repeticao2)
 
 
 State 186
 
-   71 condicao2: T_BEGIN condicao3 T_END ELSE T_BEGIN . condicao4 T_END
+   72 condicao2: T_BEGIN condicao3 T_END ELSE T_BEGIN . condicao4 T_END
 
-    $default  reduce using rule 73 ($@7)
+    $default  reduce using rule 74 ($@7)
 
     condicao4  go to state 189
     $@7        go to state 180
@@ -2215,27 +2219,27 @@ State 186
 
 State 187
 
-   70 condicao2: T_BEGIN condicao3 T_END ELSE condicao4 .
+   71 condicao2: T_BEGIN condicao3 T_END ELSE condicao4 .
 
-    $default  reduce using rule 70 (condicao2)
+    $default  reduce using rule 71 (condicao2)
 
 
 State 188
 
-   69 condicao2: condicao3 ELSE T_BEGIN condicao4 T_END .
+   70 condicao2: condicao3 ELSE T_BEGIN condicao4 T_END .
 
-    $default  reduce using rule 69 (condicao2)
+    $default  reduce using rule 70 (condicao2)
 
 
 State 189
 
-   71 condicao2: T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 . T_END
+   72 condicao2: T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 . T_END
 
     T_END  shift, and go to state 190
 
 
 State 190
 
-   71 condicao2: T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 T_END .
+   72 condicao2: T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 T_END .
 
-    $default  reduce using rule 71 (condicao2)
+    $default  reduce using rule 72 (condicao2)

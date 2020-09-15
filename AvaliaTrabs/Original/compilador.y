@@ -190,10 +190,12 @@ procedure_function3:
 ;
 
 declara_params: VAR params_ref | 
-         VAR params_ref PONTO_E_VIRGULA declara_params |
-         params_valor PONTO_E_VIRGULA declara_params | 
+         VAR params_ref declara_params2 |
+         params_valor declara_params2 | 
          params_valor 
          ;
+
+declara_params2: PONTO_E_VIRGULA declara_params;
 
 params_valor: params_valor VIRGULA param_valor | param_valor;
 
