@@ -14,6 +14,7 @@
 tabelaSimbolos_t tabelaSimbolos;
 struct pilha_t* pilhaDeRotulos;
 struct pilha_t* pilhaValores;
+struct pilha_t* pilhaRAs;
 int num_vars;
 int conta_vars;
 int conta_vars_tipo;
@@ -40,6 +41,7 @@ int nivel_lex_atual;
 programa: { 
                geraCodigo (NULL, "INPP"); 
                nivel_lex_atual = 0;
+               push(pilhaRAs, nivel_lex_atual);
                rotulo_atual = -1;
             }
                PROGRAM IDENT declara_program
@@ -175,15 +177,41 @@ write: IDENT {
 comando_composto: procedure_function | T_BEGIN  comandos T_END ;
 
 procedure_function: PROCEDURE IDENT 
-      procedure_function2 PONTO_E_VIRGULA procedure_function3 
- ;
+      procedure_function2 PONTO_E_VIRGULA procedure_function3 |
+      FUNCTION IDENT {printf("\n\naaaaaa\n\n");}
+      procedure_function2 DOIS_PONTOS retorno_func PONTO_E_VIRGULA procedure_function3
+;
 
-procedure_function2: ABRE_PARENTESES FECHA_PARENTESES |
+procedure_function2: ABRE_PARENTESES declara_params FECHA_PARENTESES |
 ;
 
 procedure_function3: 
-bloco comando_composto 
+bloco PONTO_E_VIRGULA comando_composto 
 ;
+
+declara_params: VAR params_ref | params_valor PONTO_E_VIRGULA declara_params;
+
+params_valor: params_valor VIRGULA param_valor | param_valor;
+
+param_valor: IDENT DOIS_PONTOS tipo_param_valor;
+
+tipo_param_valor: IDENT {
+   //func para inserir
+}
+;
+
+params_ref: params_ref VIRGULA param_ref | param_ref;
+
+param_ref: IDENT DOIS_PONTOS tipo_param_ref;
+
+tipo_param_ref: IDENT {
+   //func para inserir
+}
+;
+
+retorno_func: IDENT {
+
+};
 
 comandos: atribuicao PONTO_E_VIRGULA comandos |
          atribuicao PONTO_E_VIRGULA |
@@ -418,6 +446,7 @@ int main (int argc, char** argv) {
    tabelaSimbolos = initTabelaSimbolos();
    pilhaDeRotulos = createStack(100);
    pilhaValores = createStack(100);
+   pilhaRAs = createStack(10);
 
    yyin=fp;
    yyparse();
