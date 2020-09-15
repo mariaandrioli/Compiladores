@@ -1,0 +1,17 @@
+Descreva a idéia original para abordar a alteração;
+
+- Para fazer a alteração, implementei a regra das constantes similarmente a regra das váriaveis ja existente.
+Modifiquei o "parte_declara_vars" para um "parte_declara" que engloba variaveis e constantes. Como constantes nao tem
+tipo (integer, boolean etc), nao ha necessidade de recursar até o fim da declaracao. Assim, cada vez que le 
+um ponto e virgula depois de IDENT IGUAL, ja armazena na tabela de simbolos a constante com a categoria "constante",
+empilha o valor ou faz as operacoes necessarias. O valor inicial do contador de variaveis é o conta_consts (contador de constantes).
+
+
+OUTRAS ALTERAÇÕES AS QUAIS NAO TIVE TEMPO DE IMPLEMENTAR: caso houvesse uma atribuicao, faria verificacao, 
+caso o simbolo encontrado na tabela de simbolos
+fosse da categoria "constante", geraria um erro
+
+- Trechos alterados: linha 74 a 112 do compilador.y, token adicionados no compilador.l, categoria "constante" 
+adicionada na enumeração de categorias.
+
+- Não tive nenhum grande problema ao adicionar.
