@@ -42,4 +42,13 @@ void imprimeTabela(tabelaSimbolos_t tabela);
 void insereTipo(tabelaSimbolos_t tabela, int cont, char* token);
 void geraRotulo(int *num, char* rot);
 
+
+void SOMA(struct pilha_t* pilha);
+void SUBT(struct pilha_t* pilha);
+void MULT(struct pilha_t* pilha);
+void DIVI(struct pilha_t* pilha);
+void CONJ(struct pilha_t* pilha);
+void DISJ(struct pilha_t* pilha);
+void AMEM(struct pilha_t* pilha, int k);
+
 #endif // __FUNCTIONS_H__

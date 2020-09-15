@@ -122,10 +122,10 @@ void geraFinalRepeticao(struct pilha_t* pilhaDeRotulos){
 
     char exp[9];
     strcpy(exp, "DSVS ");
-    strcat(exp, rot1);
+    strcat(exp, rot2);
     geraCodigo(NULL, exp);
 
-    geraCodigo(rot2, "NADA");
+    geraCodigo(rot1, "NADA");
 }
 
 void geraFinalCondicao(struct pilha_t* pilhaDeRotulos, int *rotulo_atual){
@@ -140,3 +140,40 @@ void geraFinalCondicao(struct pilha_t* pilhaDeRotulos, int *rotulo_atual){
     
     *rotulo_atual = num;
 }
+
+void SOMA(struct pilha_t* pilha){
+    int aux = pop(pilha);
+    pilha->array[pilha->top] = pilha->array[pilha->top] + aux; 
+}
+
+void SUBT(struct pilha_t* pilha){
+    int aux = pop(pilha);
+    pilha->array[pilha->top] = pilha->array[pilha->top] - aux; 
+}
+
+void MULT(struct pilha_t* pilha){
+    int aux = pop(pilha);
+    pilha->array[pilha->top] = pilha->array[pilha->top] * aux; 
+}
+
+void DIVI(struct pilha_t* pilha){
+    int aux = pop(pilha);
+    pilha->array[pilha->top] = pilha->array[pilha->top] / aux; 
+}
+
+void CONJ(struct pilha_t* pilha){
+    int aux = pop(pilha);
+    pilha->array[pilha->top] = pilha->array[pilha->top] && aux; 
+}
+
+void DISJ(struct pilha_t* pilha){
+    int aux = pop(pilha);
+    pilha->array[pilha->top] = pilha->array[pilha->top] || aux; 
+}
+
+void AMEM(struct pilha_t* pilha, int k) 
+{ 
+    if (isFull(pilha)) 
+        return; 
+    pilha->top = pilha->top + k; 
+} 

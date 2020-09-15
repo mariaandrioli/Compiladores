@@ -13,6 +13,7 @@
 
 tabelaSimbolos_t tabelaSimbolos;
 struct pilha_t* pilhaDeRotulos;
+struct pilha_t* pilhaValores;
 int num_vars;
 int conta_vars;
 int conta_vars_tipo;
@@ -32,7 +33,7 @@ int nivel_lex_atual;
 %token ABRE_CHAVES FECHA_CHAVES ABRE_COLCHETES FECHA_COLCHETES
 %token IGUAL MAIOR MENOR DESIGUAL MAIOR_IGUAL MENOR_IGUAL
 %token MAIS MENOS ASTERISCO BARRA
-%token READ WRITE 
+%token READ WRITE
 
 %%
 
@@ -166,11 +167,23 @@ write: IDENT {
       char exp[10];
       sprintf(exp, "CRCT %d", atoi(token));
       geraCodigo(NULL, exp);
+      push(pilhaValores, atoi(token));
       geraCodigo(NULL, "IMPR");
    };
 
 
-comando_composto: T_BEGIN comandos T_END ;
+comando_composto: procedure_function | T_BEGIN  comandos T_END ;
+
+procedure_function: PROCEDURE IDENT 
+      procedure_function2 PONTO_E_VIRGULA procedure_function3 
+ ;
+
+procedure_function2: ABRE_PARENTESES FECHA_PARENTESES |
+;
+
+procedure_function3: 
+bloco comando_composto 
+;
 
 comandos: atribuicao PONTO_E_VIRGULA comandos |
          atribuicao PONTO_E_VIRGULA |
@@ -227,7 +240,6 @@ condicao2: comandos {
                geraCodigo(NULL, aux);
             } ELSE {
                geraFinalCondicao(pilhaDeRotulos, &rotulo_atual);
-               printf("\n\n%d\n\n", rotulo_atual);
             } comandos {
                char * rot = malloc(sizeof(char)*4);
                strcpy(rot, "R");
@@ -333,14 +345,17 @@ relacao: MAIOR {
 
 expressao_interna: expressao_interna MAIS termo 
       {
+         SOMA(pilhaValores);
          geraCodigo(NULL, "SOMA");
       } |
       expressao_interna MENOS termo 
       {
+         SUBT(pilhaValores);
          geraCodigo(NULL, "SUBT");
       } |
       expressao_interna OR termo 
       {
+         DISJ(pilhaValores);
          geraCodigo(NULL, "DISJ");
       } |
       termo
@@ -348,14 +363,17 @@ expressao_interna: expressao_interna MAIS termo
 
 termo: termo ASTERISCO fator 
       {
+         MULT(pilhaValores);
          geraCodigo(NULL, "MULT");
       } |
       termo DIV fator  
       {
+         DIVI(pilhaValores);
          geraCodigo(NULL, "DIVI");
       } |
       termo AND fator  
       {
+         CONJ(pilhaValores);
          geraCodigo(NULL, "CONJ");
       } |
       fator
@@ -374,6 +392,7 @@ fator: IDENT {
       /* CRCT */
       char exp[10];
       sprintf(exp, "CRCT %d", atoi(token));
+      push(pilhaValores, atoi(token));
       geraCodigo(NULL, exp);
    } |
 
@@ -398,6 +417,7 @@ int main (int argc, char** argv) {
 
    tabelaSimbolos = initTabelaSimbolos();
    pilhaDeRotulos = createStack(100);
+   pilhaValores = createStack(100);
 
    yyin=fp;
    yyparse();

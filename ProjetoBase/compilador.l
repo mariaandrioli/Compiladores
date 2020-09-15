@@ -195,6 +195,16 @@ div     { simbolo = simb_not;
         IMPRIME("div  ");
         return DIV;
 }
+procedure     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("procedure  ");
+        return PROCEDURE;
+}
+function     { simbolo = simb_not;  
+        strncpy (token, yytext, TAM_TOKEN);
+        IMPRIME("function  ");
+        return FUNCTION;
+}
 \=      { simbolo = simb_not;  
         strncpy (token, yytext, TAM_TOKEN);
         IMPRIME("igual  ");
