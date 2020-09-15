@@ -250,7 +250,36 @@ procedure_function: PROCEDURE {
       }
       procedure_function2 PONTO_E_VIRGULA procedure_function3 {
       } |
-      FUNCTION IDENT 
+      FUNCTION {
+         nivel_lex_atual++;
+         char * rot = malloc(sizeof(char)*4);
+         strcpy(rot, "R");
+         geraRotulo(&rotulo_atual, rot);
+         push(pilhaDeRotulos, rotulo_atual);
+
+         char aux[9];
+         char aux2[9];
+         strcpy(aux, "DSVS ");
+         strcat(aux, rot);
+         geraCodigo(NULL, aux);
+         
+         strcpy(rot, "R");
+         geraRotulo(&rotulo_atual, rot);
+         push(pilhaDeRotulos, atoi(rot));
+         proc_atual_end = atoi(rot);
+
+         strcpy(aux, "ENPR ");
+         sprintf(aux2, "%d", nivel_lex_atual);
+         strcat(aux, aux2);
+         geraCodigo(rot, aux);
+      } IDENT {
+         elemento_t paraInserir = malloc(sizeof(elemento_t));
+         strcpy(paraInserir->simbolo, token);
+         paraInserir->categoria = function;
+         paraInserir->nivel_lex = nivel_lex_atual;
+         paraInserir->endereco = proc_atual_end;
+         insereTabela(tabelaSimbolos, paraInserir);
+      }
       procedure_function2 DOIS_PONTOS retorno_func PONTO_E_VIRGULA procedure_function3
 ;
 
@@ -275,17 +304,19 @@ declara_params2: PONTO_E_VIRGULA declara_params;
 
 params_valor: params_valor VIRGULA param_valor | param_valor;
 
-param_valor: IDENT DOIS_PONTOS tipo_param_valor;
-
-tipo_param_valor: IDENT {
-            conta_vars_proc_atual++;
+param_valor: IDENT {
             elemento_t paraInserir = malloc(sizeof(elemento_t));
             strcpy(paraInserir->simbolo, token);
             paraInserir->categoria = varSimples;
             paraInserir->nivel_lex = nivel_lex_atual;
             paraInserir->endereco = conta_vars_proc_atual;
             insereTabela(tabelaSimbolos, paraInserir);
-         }
+            conta_vars_proc_atual++;
+         } DOIS_PONTOS tipo_param_valor;
+
+tipo_param_valor: IDENT {
+               insereTipo(tabelaSimbolos, conta_vars_proc_atual, token); // insere tipo na tabela
+            }
 ;
 
 params_ref: params_ref VIRGULA param_ref | param_ref;
@@ -298,12 +329,11 @@ tipo_param_ref: IDENT {
 ;
 
 retorno_func: IDENT {
-
 };
 
-comandos: atrib_chamada PONTO_E_VIRGULA comandos |
-         atrib_chamada PONTO_E_VIRGULA |
-         atrib_chamada |
+comandos: atribuicao PONTO_E_VIRGULA comandos |
+         atribuicao PONTO_E_VIRGULA |
+         atribuicao |
          leitura PONTO_E_VIRGULA comandos |
          leitura PONTO_E_VIRGULA |
          leitura |
@@ -315,7 +345,7 @@ comandos: atrib_chamada PONTO_E_VIRGULA comandos |
          repeticao  |
          condicao PONTO_E_VIRGULA comandos |
          condicao PONTO_E_VIRGULA |
-         condicao 
+         condicao
 ;
 
 condicao: IF ABRE_PARENTESES expressao_booleana {
@@ -347,7 +377,7 @@ condicao: IF ABRE_PARENTESES expressao_booleana {
 condicao2: condicao3 ELSE condicao4 |
          condicao3 ELSE T_BEGIN condicao4 T_END  |
          T_BEGIN condicao3 T_END ELSE condicao4 |
-         T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 T_END
+         T_BEGIN condicao3 T_END {printf("\n\n aqui \n\n");} ELSE  T_BEGIN condicao4 T_END
 ;
 
 condicao3: comandos {
@@ -360,7 +390,6 @@ condicao3: comandos {
                strcpy(aux, "DSVS ");
                strcat(aux, rot);
                geraCodigo(NULL, aux);
-               
             }
 ;
 
@@ -425,9 +454,6 @@ expressao_booleana: expressao {
     }
 ;
 
-atrib_chamada: atribuicao | chamada
-;
-
 atribuicao: IDENT  
             {
                sprintf(var_atribuicao_atual, "%s", token);
@@ -445,10 +471,6 @@ atribuicao: IDENT
             }
 ;
 
-chamada: ABRE_PARENTESES com_params FECHA_PARENTESES | fator ;
-
-com_params: {printf("\n\n aqui \n\n");};
-
 expressao: expressao_interna relacao expressao_interna
          {
             geraCodigo(NULL, operacao_bool);
@@ -457,6 +479,7 @@ expressao: expressao_interna relacao expressao_interna
 ;
 
 relacao: MAIOR {
+   
       strcpy(operacao_bool, "CMMA"); 
       } 
       | MENOR {
@@ -516,17 +539,13 @@ fator: IDENT {
       // CRVL
       char exp[10];
       elemento_t elemento = malloc(sizeof(elemento_t));
+   
       elemento = buscaTabela(tabelaSimbolos, token);
 
-      //printf("\n\n elemento;;;;; %d\n\n", elemento->categoria);
       if (elemento->categoria == varSimples){
          sprintf(exp, "CRVL %d, %d",  elemento->nivel_lex ,  elemento->endereco);
       }
 
-      if (elemento->categoria == constante){
-         sprintf(exp, "CRVL %d, %d",  elemento->nivel_lex ,  elemento->endereco);
-      }
-      
       geraCodigo(NULL, exp);
    } | 
    NUMERO

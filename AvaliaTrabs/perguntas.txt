@@ -1,0 +1,19 @@
+As maiores dificuldades que encontrei foi a implementação das chamadas e procedimentos de funções,
+pelo fato de ter de gerenciar muitas informações ao mesmo tempo. 
+
+- Lista de variáveis que foram referenciadas antes de serem inicializadas:
+    Criaria uma constante reservada para colocar na pilha no endereco da cada variavel. 
+    Caso fosse feita uma operacao usando tal variavel, imprimiria o erro "Essa varivel nao foi inicializada"
+    Se fosse necessario saber o conjunto, junto com a criação do erro, empilharia numa pilha de variaveis 
+    nao inicizalizadas e imprimiria ao final da compilacao.
+
+- Lista de procedimentos e funções que não foram chamados;
+    Criaria uma pilha de gerenciamento de procedimentos chamados. Ao fim da compilacao, 
+    compararia os elementos desta pilha com os procedimento existentes que estao na tabela de simbolos e 
+    imprimiria os que não foram chamados com uma mensagem de erro.
+
+- Lista de procedimentos e funções que não podem ser chamados porque não há um caminho do programa principal até eles.
+    Quando um procedimento fosse chamado, faria um comparacao do nivel lexico do chamado com o do chamador.
+    Caso essa diferença fosse maior que a permitida, mostraria um erro de compilaçao.
+    Se fosse necessario saber o conjunto, junto com a criação do erro, empilharia numa pilha de procedimento que 
+    nao puderam ser chamados por causa desse problema e imprimiria ao final da compilacao.
