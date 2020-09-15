@@ -178,7 +178,7 @@ comando_composto: procedure_function | T_BEGIN  comandos T_END ;
 
 procedure_function: PROCEDURE IDENT 
       procedure_function2 PONTO_E_VIRGULA procedure_function3 |
-      FUNCTION IDENT {printf("\n\naaaaaa\n\n");}
+      FUNCTION IDENT 
       procedure_function2 DOIS_PONTOS retorno_func PONTO_E_VIRGULA procedure_function3
 ;
 
@@ -186,17 +186,21 @@ procedure_function2: ABRE_PARENTESES declara_params FECHA_PARENTESES |
 ;
 
 procedure_function3: 
-bloco PONTO_E_VIRGULA comando_composto 
+         bloco PONTO_E_VIRGULA comando_composto 
 ;
 
-declara_params: VAR params_ref | params_valor PONTO_E_VIRGULA declara_params;
+declara_params: VAR params_ref | 
+         VAR params_ref PONTO_E_VIRGULA declara_params |
+         params_valor PONTO_E_VIRGULA declara_params | 
+         params_valor 
+         ;
 
 params_valor: params_valor VIRGULA param_valor | param_valor;
 
 param_valor: IDENT DOIS_PONTOS tipo_param_valor;
 
 tipo_param_valor: IDENT {
-   //func para inserir
+   //func para inserir {printf("\n\naaaaaa\n\n");}
 }
 ;
 
@@ -256,7 +260,13 @@ condicao: IF ABRE_PARENTESES expressao_booleana {
             THEN condicao2 
 ;
 
-condicao2: comandos {
+condicao2: condicao3 ELSE condicao4 |
+         condicao3 ELSE T_BEGIN condicao4 T_END  |
+         T_BEGIN condicao3 T_END ELSE condicao4 |
+         T_BEGIN condicao3 T_END ELSE T_BEGIN condicao4 T_END
+;
+
+condicao3: comandos {
                char * rot = malloc(sizeof(char)*4);
                strcpy(rot, "R");
                geraRotulo(&rotulo_atual, rot);
@@ -266,7 +276,10 @@ condicao2: comandos {
                strcpy(aux, "DSVS ");
                strcat(aux, rot);
                geraCodigo(NULL, aux);
-            } ELSE {
+            }
+;
+
+condicao4: {
                geraFinalCondicao(pilhaDeRotulos, &rotulo_atual);
             } comandos {
                char * rot = malloc(sizeof(char)*4);
@@ -274,7 +287,7 @@ condicao2: comandos {
                geraRotulo(&rotulo_atual, rot);
                push(pilhaDeRotulos, atoi(rot));
                geraCodigo(rot, "NADA");
-            } 
+            }
 ;
 
 repeticao: WHILE
