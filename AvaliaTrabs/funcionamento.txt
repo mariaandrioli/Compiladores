@@ -1,1 +1,8 @@
-Observações para a parte 1 da avaliação
+Parte 1 da avaliação:
+
+Observações:
+- AMEM foi feito utilizando a quantidade total de vars;
+- Infelizmente acabei deixando a parte de chamada de procedimento e funções para essas ultimas duas semanas
+e devido a alguns imprevistos não consegui implementa-lás. Por causa disso, muitos dos programas dão erros. Entendo o sistema
+de avaliação, mas espero que o trabalho que foi implementado seja o suficiente para que a nota que 
+sera recebida não seja tão negativamente influenciada, especialmente na parte 1.
