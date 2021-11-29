@@ -1,0 +1,40 @@
+G1 = {A → BA+ | BA-
+        B → *A | a 
+}
+
+G1' = { A' → A#         0
+        A → BA+         1
+        A → BA-         2
+        B → *A          3
+        B → a           4
+}
+
+A	B	+	-	*	a	#
+
+e0 = [A' -> •A#], [A -> •BA+], [A -> •BA-], [B -> •*A], [B -> •a]
+
+T(e0, A) = [A' -> A•#] = e1
+T(e0, B) (com fecho) = [A -> B•A+], [A -> B•A-], [A -> •BA+], [A -> •BA-], [B -> •*A], [B -> •a] = e2
+T(e0, *) (com fecho) = [B -> *•A], [A -> •BA+], [A -> •BA-], [B -> •*A], [B -> •a] = e3
+T(e0, a) = [B -> a•] = e4
+
+T(e2, A) = [A -> BA•+], [A -> BA•-] = e5
+T(e2, B) = [A -> B•A+], [A -> B•A-], [A -> •BA+], [A -> •BA-], [B -> •*A], [B -> •a] = e2
+T(e2, +) = [B -> *•A], [A -> •BA+], [A -> •BA-], [B -> •*A], [B -> •a] = e3
+T(e2, a) = [B -> a•] = e4
+
+T(e3, A) = [B -> *A•] = e6
+T(e3, B) = [A -> B•A+], [A -> B•A-], [A -> •BA+], [A -> •BA-], [B -> •*A], [B -> •a] = e2
+T(e3, a) = [B -> a•] = e4
+
+T(e5, +) = [A -> BA+•] = e7
+T(e5, -) = [A -> BA-•] = e8
+
+
+G1' = { A' → A#         0
+        A → BA+ | BA-   1
+        B → *A | a      2
+}
+
+Segue(A) = {#,+,-}
+Segue(B) = {}

@@ -1,0 +1,72 @@
+GB = {S → AS|BA
+        A → aB|C
+        B → bA|d
+        C → c
+        }
+
+GB' = { S' = S#
+        S → AS|BA
+        A → aB|C
+        B → bA|d
+        C → c
+        }
+
+Tabela Primeiro             TERMINAIS
+S' | S      | SABaCbdc  | abdc
+S  | AB     | ABaCbdc   | abdc
+A  | aC     | aCc       | ac
+B  | bd     | bd        | bd
+C  | c      | c         | c
+
+GB' = { S' = S#
+        S → AS|BA
+        A → aB|C
+        B → bA|d
+        C → c
+        }
+
+procedimento C() {
+    Se token != 'c' Então
+        ErroFatal();
+    token := Proximo();
+}
+
+procedimento B() {
+    Caso token for
+        'd' : token := Proximo();
+        'b' : token := Proximo();
+            A();
+        outros:
+            ErroFatal();
+    FimCaso
+}
+
+procedimento A() {
+    Caso token for
+        'a' : token := Proximo();
+            B();
+        ∈ Primeiro(C): C();
+        outros:
+            ErroFatal();
+    FimCaso
+}
+
+procedimento S() {
+    Caso token for
+        ∈ Primeiro(A): 
+            A();
+            S();
+        ∈ Primeiro(B): 
+            B();
+            A();
+        outros:
+            ErroFatal();
+    FimCaso
+}
+
+procedimento S'() {
+    S();
+    Se token != <fim do arquivo> Então
+        ErroFatal();
+    FimSe
+}
